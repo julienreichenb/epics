@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { MenuItem, SubMenu } from 'react-pro-sidebar'
-import { Label, Input, Row, Col } from 'reactstrap'
-import './FeatureList.css' 
+import { Row, Col } from 'reactstrap'
+import { FaCheck, FaTimes } from 'react-icons/fa'
+import './FeatureList.scss' 
  
 const FeatureList = props => {
+
+    const green = '#75BD4B'
+    const red = '#F0706A'
 
     const formatName = (name, size) => {
         return name.length > size ? name.substring(0, size) + '...' : name
@@ -15,16 +19,17 @@ const FeatureList = props => {
                 {props.features.map((f) => {                        
                     return f.items 
                     ? 
-                        <SubMenu title={f.name} key={f.name}>
+                        <SubMenu title={f.name} key={f.name} className="SidePanelSubMenu">
                             {f.items.map((i) => {
                                 return (
-                                    <MenuItem key={i.id} onClick={() => props.change(f, i)}>
+                                    {/* Manage bulk select / deselect */},                         
+                                    <MenuItem key={i.id} onClick={() => props.change(f, i)} className="SidePanelItem">
                                         <Row>
                                             <Col xs="8">
-                                                <span>{formatName(i.name, 16)}</span>
+                                                <span className={i.selected ? 'selected' : ''}>{formatName(i.name, 16)}</span>
                                             </Col>
-                                            <Col>
-                                                <Input type="checkbox" checked={i.selected} readOnly />
+                                            <Col style={{textAlign: 'right'}}>
+                                            {i.selected ? <FaCheck color={green} /> : <FaTimes color={red} />}
                                             </Col>
                                         </Row>
                                     </MenuItem>
@@ -38,7 +43,7 @@ const FeatureList = props => {
                                     <span className={f.selected ? 'selected' : ''}>{formatName(f.name, 16)}</span>
                                 </Col>
                                 <Col style={{textAlign: 'right'}}>
-                                    <Input type="checkbox" checked={f.selected} readOnly />
+                                    {f.selected ? <FaCheck color={green} /> : <FaTimes color={red} />}
                                 </Col>
                             </Row>
                         </MenuItem>                                                                              

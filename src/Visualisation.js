@@ -44,7 +44,10 @@ const Visualisation = props => {
           selected: true
         })
       })
-      setFeatures(newFeatures)
+      const f1 = { id: 0, name: 'First', items: newFeatures.slice(0, 7)}
+      const f2 = { id: 1, name: 'Second', items: newFeatures.slice(7, 7)}
+      const f3 = { id: 2, name: 'Third', items: newFeatures.slice(14, 7)}
+      setFeatures([f1, f2, f3, {id: 4, name: 'Hello', selected: true }])
     }
 
     const loadCharts = (features) => {

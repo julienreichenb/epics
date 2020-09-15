@@ -11,7 +11,7 @@ const SidePanel = props => {
                 <SidebarHeader className='SidePanelHeader'>
                     Sélection des features
                 </SidebarHeader>
-                <SidebarContent>
+                <SidebarContent className='SidePanelContent'>
                     {props.features.length ?  
                     <Menu>
                         <FeatureList features={props.features} change={props.change} />                
