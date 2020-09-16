@@ -5,7 +5,6 @@ body {
 .App {
   text-align: center;
   margin: 0em;
-  padding: 1em;
   display: flex;
   min-height: 100vh;
   flex-direction: column;
@@ -16,6 +15,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  padding-bottom: 60px;
 }
 
 .Main {

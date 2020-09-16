@@ -1,4 +1,3 @@
 .Main {
-    align-items: flex-start !important;
-    margin-top: 3em;
+    flex-direction: column;
 }
