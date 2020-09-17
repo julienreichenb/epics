@@ -1,27 +1,37 @@
 import React, { useEffect, useState } from 'react'
 import { ProSidebar, Menu, SidebarHeader, SidebarContent } from 'react-pro-sidebar'
-import { FaComments, FaEyeSlash } from 'react-icons/fa'
+import { FaComments, FaEyeSlash, FaPlus } from 'react-icons/fa'
 import { Row, Col, Button } from 'reactstrap'
 import Loading from './Loading'
 import AnnotationList from './AnnotationList'
-import moment from 'moment'
+import AddAnnotationModal from './AddAnnotationModal'
 import './AnnotationPanel.scss'
 
 const AnnotationPanel = props => {
     const [collapsed, setCollapsed] = useState(false)
+    const [showModal, setShowModal] = useState(false)
+
+    const saveAnnotation = (title, text, parentId) => {
+        setShowModal(false)
+        props.saveAnnotation(title, text, parentId)
+    }
+
     return (
         <>
             <ProSidebar collapsed={collapsed} className='AnnotationPanel' onClick={() => collapsed && setCollapsed(false)}>
                 <SidebarHeader className='SidePanelHeader'>
                     <Row>
-                        <Col xs="9">
+                        <Col xs="7">
                             <h5><FaComments className="mr-2" />{!collapsed && 'Discussions'}</h5>         
                         </Col>
                         {!collapsed &&
-                        <Col>
-                            <Button color="light" size="sm" className="pb-2" onClick={() => setCollapsed(!collapsed)}>
-                                <FaEyeSlash />
+                        <Col className='text-right'>
+                            <Button className='mr-4' color='success' onClick={() => setShowModal(true)}>
+                                <FaPlus className='mr-2'/>Commenter
                             </Button>
+                            <Button color="light" onClick={() => setCollapsed(!collapsed)}>
+                                <FaEyeSlash />
+                            </Button>                            
                         </Col>
                         }                        
                     </Row>
@@ -32,13 +42,11 @@ const AnnotationPanel = props => {
                     : props.annotations.length === 0
                     ? <h5>Aucune annotation pour le moment.</h5>
                     : <Menu iconShape='circle'>
-                        <AnnotationList annotations={props.annotations} collapsed={collapsed} />
-                    </Menu>}             
+                        <AnnotationList annotations={props.annotations} collapsed={collapsed} saveAnnotation={saveAnnotation} />
+                    </Menu>}                                 
                 </SidebarContent>  
+                <AddAnnotationModal show={showModal} toggle={() => setShowModal(false)} save={saveAnnotation} />
             </ProSidebar>
-            <div>
-                
-            </div>
         </>
     )
 }

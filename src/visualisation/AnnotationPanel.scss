@@ -1,6 +1,6 @@
 $sidebar-bg-color: #efefef;
 $sidebar-color: #2b2b2b;
-$sidebar-width: 600px !default;
+$sidebar-width: 700px !default;
 $sidebar-collapsed-width: 60px;
 $highlight-color: #191919;
 $submenu-bg-color: #efefef;
@@ -35,8 +35,13 @@ $breakpoint-xl: 1200px !default;
         direction: ltr;
     }
 
+    .SidePanelContent {
+        direction: ltr;
+    }
+
     .SidePanelSubMenu {
         direction: ltr;   
+        border-bottom: 1px solid $icon-bg-color;
     }
 
     .pro-inner-item {
@@ -52,10 +57,19 @@ $breakpoint-xl: 1200px !default;
     }
 
     .open {
-        background: #dadada;    
+        background: #ababab;    
         
         > .pro-inner-item {
             font-weight: bold;
+        }
+
+        .pro-icon-wrapper {
+            background-color: #efefef !important;
+        }
+
+        .open {
+            background: #e0e0e0;
+            border-bottom: 1px solid #efefef;  
         }
     }
     
@@ -65,7 +79,7 @@ $breakpoint-xl: 1200px !default;
     
     /* width */
     ::-webkit-scrollbar {
-        width: 10px;
+        width: 5px;
     }
 
     /* Track */

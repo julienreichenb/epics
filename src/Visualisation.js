@@ -58,19 +58,26 @@ const Visualisation = props => {
       */
       const annots = [
         {
+          id: 0,
+          user: 1,
+          title: 'My very long title that should fit in the component without going outside it eheh',
+          text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel libero ipsum. Etiam fermentum dui nisl, quis porttitor velit porttitor quis. Nullam et enim tristique, commodo turpis ac, hendrerit sem. Nulla hendrerit tincidunt felis a euismod. Nam eros libero, suscipit vehicula mi a, elementum efficitur tellus. Sed non bibendum arcu, sed placerat massa. Proin suscipit, arcu sit amet iaculis finibus, eros ante mattis mi, vel finibus diam dui convallis lectus. Etiam aliquam aliquet massa, a aliquet augue eleifend eget.',
+          date: new Date(2020, 3, 1, 12, 30, 22),
+        },
+        {
           id: 1,
           user: 1,
-          title: 'My Title',
+          title: 'My very long title that should fit in the component without going outside it eheh',
           text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel libero ipsum. Etiam fermentum dui nisl, quis porttitor velit porttitor quis. Nullam et enim tristique, commodo turpis ac, hendrerit sem. Nulla hendrerit tincidunt felis a euismod. Nam eros libero, suscipit vehicula mi a, elementum efficitur tellus. Sed non bibendum arcu, sed placerat massa. Proin suscipit, arcu sit amet iaculis finibus, eros ante mattis mi, vel finibus diam dui convallis lectus. Etiam aliquam aliquet massa, a aliquet augue eleifend eget.',
-          date: new Date(2020, 9, 1, 12, 0, 0),
+          date: new Date(2020, 3, 1, 12, 0, 0),
         },
         {
           id: 2,
           parentId: 1,
-          user: 1,
+          user: 2,
           title: 'My Title',
           text: 'This is an answer',
-          date: new Date(2020, 9, 1, 13, 0, 0),
+          date: new Date(2020, 3, 1, 13, 0, 0),
         },
         {
           id: 3,
@@ -78,38 +85,38 @@ const Visualisation = props => {
           user: 1,
           title: 'My Title',
           text: 'This is another answer',
-          date: new Date(2020, 9, 1, 13, 30, 0),
+          date: new Date(2020, 3, 1, 13, 30, 0),
         },
         {
           id: 4,
-          user: 1,
+          user: 2,
           title: 'My Title',
           text: 'New comment !',
-          date: new Date(2020, 9, 10, 12, 0, 0),
+          date: new Date(2020, 3, 10, 12, 0, 0),
         },
         {
           id: 5,
           parentId: 4,
-          user: 1,
+          user: 3,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 10, 23),
         },
         {
           id: 6,
           parentId: 4,
-          user: 1,
+          user: 3,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 10, 12),
         },
         {
           id: 7,
           parentId: 4,
-          user: 1,
+          user: 2,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 10, 8),
         },
         {
           id: 8,
@@ -117,7 +124,7 @@ const Visualisation = props => {
           user: 1,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 15, 0),
         },
         {
           id: 9,
@@ -125,7 +132,7 @@ const Visualisation = props => {
           user: 1,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 16, 4),
         },
         {
           id: 10,
@@ -133,7 +140,7 @@ const Visualisation = props => {
           user: 1,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 10, 0),
         },
         {
           id: 11,
@@ -141,7 +148,7 @@ const Visualisation = props => {
           user: 1,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 10, 0),
         },
         {
           id: 12,
@@ -149,7 +156,7 @@ const Visualisation = props => {
           user: 1,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 10, 0),
         },
         {
           id: 13,
@@ -157,7 +164,7 @@ const Visualisation = props => {
           user: 1,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 10, 0),
         },
         {
           id: 14,
@@ -165,7 +172,7 @@ const Visualisation = props => {
           user: 1,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 10, 0),
         },
         {
           id: 15,
@@ -173,7 +180,7 @@ const Visualisation = props => {
           user: 1,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 10, 0),
         },
         {
           id: 16,
@@ -181,7 +188,7 @@ const Visualisation = props => {
           user: 1,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 10, 0),
         },
         {
           id: 17,
@@ -189,7 +196,7 @@ const Visualisation = props => {
           user: 1,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 10, 0),
         },
         {
           id: 18,
@@ -197,7 +204,7 @@ const Visualisation = props => {
           user: 1,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 10, 0),
         },
         {
           id: 19,
@@ -205,7 +212,7 @@ const Visualisation = props => {
           user: 1,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 10, 0),
         },
         {
           id: 20,
@@ -213,7 +220,7 @@ const Visualisation = props => {
           user: 1,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 10, 0),
         },
         {
           id: 21,
@@ -221,7 +228,7 @@ const Visualisation = props => {
           user: 1,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 10, 0),
         },
         {
           id: 22,
@@ -229,7 +236,7 @@ const Visualisation = props => {
           user: 1,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 10, 0),
         },
         {
           id: 23,
@@ -237,7 +244,7 @@ const Visualisation = props => {
           user: 1,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 10, 0),
         },
         {
           id: 24,
@@ -245,7 +252,7 @@ const Visualisation = props => {
           user: 1,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 10, 0),
         },
         {
           id: 25,
@@ -253,7 +260,7 @@ const Visualisation = props => {
           user: 1,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 10, 0),
         },
         {
           id: 26,
@@ -261,7 +268,7 @@ const Visualisation = props => {
           user: 1,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 10, 0),
         },
         {
           id: 27,
@@ -269,7 +276,7 @@ const Visualisation = props => {
           user: 1,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 10, 0),
         },
         {
           id: 28,
@@ -277,7 +284,7 @@ const Visualisation = props => {
           user: 1,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 10, 0),
         },
         {
           id: 29,
@@ -285,17 +292,34 @@ const Visualisation = props => {
           user: 1,
           title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 10, 0),
         },
         {
           id: 30,
           parentId: 4,
           user: 1,
+          title: 'My Title',
           text: 'New answer !',
-          date: new Date(2020, 9, 10, 12, 10, 0),
+          date: new Date(2020, 3, 10, 12, 10, 0),
         },
       ]
       setAnnotations(annots)
+    }
+
+    const saveAnnotation = (title, text, parentId) => {
+      console.log(parentId)
+      const newAnnot = {
+        id: 100, // Should be managed by the ORM
+        title,
+        text,
+        user: 5, // Get current user ID,
+        date: new Date(),
+      }
+      if(parentId)
+        newAnnot.parentId = parentId
+      // Refresh the list
+      annotations.push(newAnnot)
+      setAnnotations([...annotations])
     }
 
     /*
@@ -372,7 +396,7 @@ const Visualisation = props => {
         <div className='Visualisation'>
           <SidePanel features={features} change={change} all={selectAll} />
           <Main lasagna={lasagnaChart} pca={pcaChart} loading={loading} /> 
-          <AnnotationPanel annotations={annotations} loading={loading} />      
+          <AnnotationPanel annotations={annotations} loading={loading} saveAnnotation={saveAnnotation} />      
         </div>
       </>
     )
