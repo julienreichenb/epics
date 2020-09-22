@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import UserContext from './context/UserContext'
 import SidePanel from './visualisation/SidePanel'
 import Main from './visualisation/Main'
@@ -9,7 +9,7 @@ import PCA from './assets/charts/PCA.json'
 import Lasagna from './assets/charts/Lasagna.json'
 
 const Visualisation = props => {
-    // const user = useContext(UserContext);
+    const user = useContext(UserContext);
     const [loading, setLoading] = useState(true)
     const [features, setFeatures] = useState([])
     const [annotations, setAnnotations] = useState([])
@@ -58,8 +58,8 @@ const Visualisation = props => {
       */
       const annots = [
         {
-          id: 0,
-          user: 1,
+          id: 50,
+          user: 12,
           title: 'My very long title that should fit in the component without going outside it eheh',
           text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel libero ipsum. Etiam fermentum dui nisl, quis porttitor velit porttitor quis. Nullam et enim tristique, commodo turpis ac, hendrerit sem. Nulla hendrerit tincidunt felis a euismod. Nam eros libero, suscipit vehicula mi a, elementum efficitur tellus. Sed non bibendum arcu, sed placerat massa. Proin suscipit, arcu sit amet iaculis finibus, eros ante mattis mi, vel finibus diam dui convallis lectus. Etiam aliquam aliquet massa, a aliquet augue eleifend eget.',
           date: new Date(2020, 3, 1, 12, 30, 22),
@@ -306,8 +306,8 @@ const Visualisation = props => {
       setAnnotations(annots)
     }
 
-    const saveAnnotation = (title, text, parentId) => {
-      console.log(parentId)
+    const saveAnnotation = (title, text, parentId, currentAnnot) => {
+      let newAnnotations = [...annotations]
       const newAnnot = {
         id: 100, // Should be managed by the ORM
         title,
@@ -315,10 +315,21 @@ const Visualisation = props => {
         user: 5, // Get current user ID,
         date: new Date(),
       }
-      if(parentId)
+      if (currentAnnot) {
+        newAnnot.id = currentAnnot.id
+        // Remove old annotation
+        newAnnotations = newAnnotations.filter((a) => a.id !== currentAnnot.id)
+      }
+      if (parentId)
         newAnnot.parentId = parentId
       // Refresh the list
-      annotations.push(newAnnot)
+      newAnnotations.push(newAnnot)
+      setAnnotations(newAnnotations)
+    }
+
+    const deleteAnnotation = (id) => {
+      let deletedAnnot = annotations.find((a) => a.id === id)
+      deletedAnnot.deleted = true
       setAnnotations([...annotations])
     }
 
@@ -396,7 +407,12 @@ const Visualisation = props => {
         <div className='Visualisation'>
           <SidePanel features={features} change={change} all={selectAll} />
           <Main lasagna={lasagnaChart} pca={pcaChart} loading={loading} /> 
-          <AnnotationPanel annotations={annotations} loading={loading} saveAnnotation={saveAnnotation} />      
+          <AnnotationPanel 
+            annotations={annotations} 
+            loading={loading} 
+            saveAnnotation={saveAnnotation} 
+            deleteAnnotation={deleteAnnotation}
+            user={user} />      
         </div>
       </>
     )
