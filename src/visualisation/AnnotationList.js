@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { FaComment, FaUser, FaReply, FaTrashAlt, FaEdit } from 'react-icons/fa'
 import './AnnotationList.scss'
 import { SubMenu } from 'react-pro-sidebar'
-import { Row, Col, Badge, Button, ButtonGroup } from 'reactstrap'
+import { Row, Col, Badge, Button } from 'reactstrap'
 import moment from 'moment'
 
 const AnnotationList = props => {
@@ -19,6 +19,9 @@ const AnnotationList = props => {
                 text: a.text,
                 date: a.date,
                 deleted: a.deleted && true,
+                show: a.title.toLowerCase().includes(props.search.toLowerCase()) 
+                    || a.text.toLowerCase().includes(props.search.toLowerCase()) 
+                    || props.search === ''
             }
             if(!a.parentId) {
                 annot.answers = []
@@ -32,7 +35,7 @@ const AnnotationList = props => {
             a.answers = sortByDate(a.answers)
         })
         setParentAnnotations(annots)
-    }, [props.annotations])
+    }, [props.annotations, props.search])
 
     const sortByDate = (list) => {
         return list.sort((a, b) => {
@@ -59,21 +62,20 @@ const AnnotationList = props => {
                 <Row>
                     <Col>{annot.deleted
                         ? deleted(annot)
-                        : <span>{annot.title.length > 40 ? annot.title.substring(0, 40) + '...' : annot.title}</span>
-                        }                        
+                        : <span>{annot.title.length > 40 ? annot.title.substring(0, 40) + '...' : annot.title}</span>}                        
                     </Col>    
-                    <Col xs='5'>
+                    <Col xs='3'>
                         {/* props.user.id === a.user || props.user.isAdmin && */
-                        <ButtonGroup>
-                            <Button color='danger' size='sm' onClick={() => deleteAnnotation(annot)}>
-                                <FaTrashAlt />Supprimer
+                        <>
+                            <Button color='danger' className='small-btn' onClick={() => deleteAnnotation(annot)}>
+                                <FaTrashAlt />
                             </Button>
-                            <Button color='dark' size='sm' onClick={() => editAnnotation(annot)}>
-                                <FaEdit />Modifier
+                            <Button color='dark' className='small-btn' onClick={() => editAnnotation(annot)}>
+                                <FaEdit />
                             </Button>
-                        </ButtonGroup>
-                        }       
-                    </Col>                
+                        </>
+                        }
+                    </Col>
                 </Row>
                 <Row className='text-muted'>
                     <Col xs='5'>
@@ -95,9 +97,13 @@ const AnnotationList = props => {
                     </Col>
                     }                    
                 </Row>
-            </div>
-           
+            </div>           
         )
+    }
+
+    const formattedText = (text) => {
+        const reg = new RegExp('(' + props.search + ')', 'gi');
+        return text.replace(reg, '<strong>$1</strong>')
     }
 
     const deleted = (annot) => {
@@ -110,42 +116,75 @@ const AnnotationList = props => {
         )
     }
 
+    const shownChildren = (answers) => {
+        let show = false
+        answers.map((a) => {
+            if(a.show)
+                show = true
+        })
+        return show
+    }
+
+    const noResult = () => {
+        let empty = true
+        parentAnnotations.map((a) => {
+            if (a.show) empty = false
+            a.answers.map((x) => {
+                if (x.show) empty = false
+            })
+        })
+        return empty
+    }
+
     return (
         <>
-            {parentAnnotations.map((a) => {
-                return (
-                    <SubMenu 
-                        key={a.id} 
-                        className='SidePanelSubMenu' 
-                        icon={<FaComment />} 
-                        title={!props.collapsed && annotationTitle(a)}
-                    >
-                        {!props.collapsed &&
-                        <div className="SidePanelItem p-3">
-                            {a.deleted ? deleted(a) : a.text}
-                            <div className='text-right'>                                                       
-                                <Button className='ml-2' color='primary' size='sm' onClick={() => answerAnnotation(a.id)}>
-                                    <FaReply className='mr-2' />Répondre
-                                </Button>
-                            </div>
-                        </div>    
-                        }                    
-                        {!props.collapsed && a.answers.map((x) => {
-                            return (
-                                <SubMenu 
-                                    key={x.id} 
-                                    className='SidePanelSubMenu' 
-                                    title={!props.collapsed && annotationTitle(x)}
-                                >
-                                    <div className="SidePanelItem py-2 px-3">
-                                        {x.deleted ? deleted(x) : x.text}
-                                    </div>
-                                </SubMenu>
-                            )
-                        })}                    
-                    </SubMenu>
-                )
-            })}
+            {noResult()
+            ? 
+            <div class='text-center text-muted mt-5'>
+                <h5>Aucune annotation trouvée.</h5>
+            </div>
+            : 
+            parentAnnotations.map((a) => {
+                if(a.show || shownChildren(a.answers))
+                    return (
+                        <SubMenu 
+                            key={a.id} 
+                            className='SidePanelSubMenu' 
+                            icon={<FaComment />} 
+                            title={!props.collapsed && annotationTitle(a)}
+                        >
+                            {!props.collapsed &&
+                            <div className="SidePanelItem p-3">
+                                {a.deleted 
+                                ? deleted(a) 
+                                : <span dangerouslySetInnerHTML={{__html: formattedText(a.text)}} />}
+                                <div className='text-right'>                                                       
+                                    <Button className='ml-2' color='primary' size='sm' onClick={() => answerAnnotation(a.id)}>
+                                        <FaReply className='mr-2' />Répondre
+                                    </Button>
+                                </div>
+                            </div>    
+                            }                    
+                            {!props.collapsed && a.answers.map((x) => {
+                                if (x.show)
+                                    return (
+                                        <SubMenu 
+                                            key={x.id} 
+                                            className='SidePanelSubMenu' 
+                                            title={!props.collapsed && annotationTitle(x)}
+                                        >
+                                            <div className="SidePanelItem py-2 px-3">
+                                                {x.deleted 
+                                                ? deleted(x) 
+                                                : <span dangerouslySetInnerHTML={{__html: formattedText(x.text)}} />}                                            
+                                            </div>
+                                        </SubMenu>
+                                    )
+                            })}                    
+                        </SubMenu>
+                    )
+            })
+            }
         </>
     )
 }

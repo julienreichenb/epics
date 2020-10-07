@@ -6,6 +6,7 @@ import Loading from './Loading'
 import AnnotationList from './AnnotationList'
 import AddAnnotationModal from './AddAnnotationModal'
 import DeleteAnnotationModal from './DeleteAnnotationModal'
+import SearchBarAnnotation from './SearchBarAnnotation'
 import './AnnotationPanel.scss'
 
 const AnnotationPanel = props => {
@@ -15,6 +16,16 @@ const AnnotationPanel = props => {
     const [parentId, setParentId] = useState(null)
     const [editingAnnotation, setEditingAnnotation] = useState(null)
     const [deletingAnnotation, setDeletingAnnotation] = useState(null)
+    const [search, setSearch] = useState('')
+
+    // Reset searchbar on collapse
+    useEffect(() => {
+        setSearch('')
+    }, [collapsed])
+
+    const getSearch = (term) => {
+        setSearch(term)
+    }
 
     const answerAnnotation = (parentId) => {
         setEditingAnnotation(null)
@@ -59,14 +70,19 @@ const AnnotationPanel = props => {
                             <h5><FaComments className="mr-2" />{!collapsed && 'Discussions'}</h5>         
                         </Col>
                         {!collapsed &&
-                        <Col className='text-right'>
-                            <Button className='mr-4' color='success' onClick={() => setShowSaveModal(true)}>
-                                <FaPlus className='mr-2'/>Commenter
-                            </Button>
-                            <Button color="light" onClick={() => setCollapsed(!collapsed)}>
-                                <FaEyeSlash />
-                            </Button>                            
-                        </Col>
+                        <>
+                            <Col xs="3" className='text-right'>
+                                <Button color='success' onClick={() => setShowSaveModal(true)}>
+                                    <FaPlus className='mr-2'/>Commenter
+                                </Button>                                 
+                            </Col>
+                            <Col className='text-right'>
+                                <Button color="light" onClick={() => setCollapsed(!collapsed)}>
+                                    <FaEyeSlash />
+                                </Button>       
+                            </Col>
+                            <SearchBarAnnotation search={getSearch}/>
+                        </>              
                         }                        
                     </Row>
                 </SidebarHeader>
@@ -74,10 +90,13 @@ const AnnotationPanel = props => {
                     {props.loading
                     ? <Loading color="info" size="sm"><small>Chargement des annotations...</small></Loading>
                     : props.annotations.length === 0
-                    ? <h5>Aucune annotation pour le moment.</h5>
+                    ? <div class='text-center text-muted mt-5'>
+                        <h5>Aucune annotation trouvée.</h5>
+                    </div>
                     : <Menu iconShape='circle'>
                         <AnnotationList 
                             annotations={props.annotations} 
+                            search={search}
                             collapsed={collapsed} 
                             answerAnnotation={answerAnnotation} 
                             editAnnotation={askEditAnnotation}

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form, FormGroup, FormFeedback } from 'reactstrap'
 import { FaRegSave } from 'react-icons/fa'
-import { Formik, withFormik } from 'formik'
+import { withFormik } from 'formik'
 import * as Yup from 'yup'
 import './AddAnnotationModal.css'
 

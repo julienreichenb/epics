@@ -76,7 +76,7 @@ const Visualisation = props => {
           parentId: 1,
           user: 2,
           title: 'My Title',
-          text: 'This is an answer',
+          text: 'This is a search',
           date: new Date(2020, 3, 1, 13, 0, 0),
         },
         {
