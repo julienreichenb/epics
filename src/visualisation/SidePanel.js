@@ -12,6 +12,7 @@ const SidePanel = props => {
             <ProSidebar className='SidePanel'>
                 <SidebarHeader className='SidePanelHeader'>
                     <h5><FaFlask className="mr-2" />Features</h5>         
+                    <small>({props.features.length} sélectionnées)</small>
                     <ButtonGroup>
                         <Button color="success" size="sm" onClick={() => props.all(true)}>
                             Tout <FaCheckDouble color="white" />
