@@ -38,10 +38,10 @@ const AnnotationPanel = props => {
         setShowSaveModal(true)
     }
 
-    const saveAnnotation = (title, text) => {
+    const saveAnnotation = (title, text, lines) => {
         setShowSaveModal(false)
         setEditingAnnotation(null)
-        props.saveAnnotation(title, text, parentId, editingAnnotation)
+        props.saveAnnotation(title, text, lines, parentId, editingAnnotation)
     }
 
     const askDeleteAnnotation = (a) => {

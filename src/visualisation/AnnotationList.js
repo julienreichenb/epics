@@ -18,6 +18,7 @@ const AnnotationList = props => {
                 title: a.title,
                 text: a.text,
                 date: a.date,
+                lines: a.lines ? a.lines : null,
                 deleted: a.deleted && true,
                 show: a.title.toLowerCase().includes(props.search.toLowerCase()) 
                     || a.text.toLowerCase().includes(props.search.toLowerCase()) 
@@ -65,7 +66,7 @@ const AnnotationList = props => {
                         : <span>{annot.title.length > 40 ? annot.title.substring(0, 40) + '...' : annot.title}</span>}                        
                     </Col>    
                     <Col xs='3'>
-                        {/* props.user.id === a.user || props.user.isAdmin && */
+                        {/* !annot.deleted && (props.user.id === a.user || props.user.isAdmin) && */
                         <>
                             <Button color='danger' className='small-btn' onClick={() => deleteAnnotation(annot)}>
                                 <FaTrashAlt />
@@ -140,7 +141,7 @@ const AnnotationList = props => {
         <>
             {noResult()
             ? 
-            <div class='text-center text-muted mt-5'>
+            <div className='text-center text-muted mt-5'>
                 <h5>Aucune annotation trouvée.</h5>
             </div>
             : 

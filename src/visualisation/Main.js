@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import { Row, Col } from 'reactstrap'
+import React, { useEffect, useRef } from 'react'
 import VegaChart from './VegaChart'
 import Loading from './Loading'
 import './Main.css' 
 
 const Main = props => {
-    const [isTrue, setIsTrue] = useState(true)
+
     return (
         <>
-            <div className='Main'>
+            <div className='Main'>                
                 {props.loading 
                 ? <Loading color="dark">
                     <h3>Chargement des graphiques...</h3>                

@@ -4,6 +4,7 @@ import SidePanel from './visualisation/SidePanel'
 import Main from './visualisation/Main'
 import AnnotationPanel from './visualisation/AnnotationPanel'
 import './Visualisation.css'
+import backend from './services/backend'
 // Temporary -> will load from backend
 import PCA from './assets/charts/PCA.json'
 import Lasagna from './assets/charts/Lasagna.json'
@@ -11,20 +12,24 @@ import Lasagna from './assets/charts/Lasagna.json'
 const Visualisation = props => {
     const user = useContext(UserContext);
     const [loading, setLoading] = useState(true)
+    // Features
     const [features, setFeatures] = useState([])
+    const [regions, setRegions] = useState([])
+    const [modalities, setModalities] = useState([])
+    // Annotations
     const [annotations, setAnnotations] = useState([])
+    // Charts
     const [pcaChart, setPcaChart] = useState(null)
     const [lasagnaChart, setLasagnaChart] = useState(null)
 
     // Initial feature loading
     useEffect(() => {
-      loadFeatures()
-      loadAnnotations()
+      apiCalls()
     }, [])
 
     // Refresh charts on feature change
     useEffect(() => {
-      apiCalls()
+      loadCharts(features)
     }, [features])
 
     // Update Vega
@@ -33,20 +38,20 @@ const Visualisation = props => {
     }, [lasagnaChart, pcaChart])
 
     const apiCalls = () => {
-      loadCharts(features)
+      // loadFeatures()
+      loadAnnotations()
     }
 
-    const loadFeatures = () => {
-      /*
-      ** Temporary solution, should be done through the API
-      */ 
-      const featuresNames = [... new Set(Lasagna.datasets.features.map((f) => f.feature_name))]
+    const loadFeatures = async () => {
+      const lasagnaData = await backend.getLasagnaData(props.albumId)
+      const featuresNames = [... new Set(lasagnaData.map((f) => f.feature_name))]
+      setModalities([ ... new Set(featuresNames.map((n) => n.split('-')[0]))])
+      setRegions([ ... new Set(featuresNames.map((n) => n.split('-')[1].split('_')[0]))])
       const newFeatures = []
       featuresNames.map((f, index) => {
         newFeatures.push({
-          id: index,
-          name: f,
-          selected: true
+          key: f,
+          selected: true,
         })
       })
       setFeatures(newFeatures)
@@ -55,6 +60,7 @@ const Visualisation = props => {
     const loadAnnotations = () => {
       /*
       ** Temporary solution, should be done through the API
+      ** albumId should be added
       */
       const annots = [
         {
@@ -306,13 +312,14 @@ const Visualisation = props => {
       setAnnotations(annots)
     }
 
-    const saveAnnotation = (title, text, parentId, currentAnnot) => {
+    const saveAnnotation = (title, text, lines, parentId, currentAnnot) => {
       let newAnnotations = [...annotations]
       const newAnnot = {
         id: 100, // Should be managed by the ORM
         title,
         text,
-        user: 5, // Get current user ID,
+        lines,
+        user: 5, // Get current user ID
         date: new Date(),
       }
       if (currentAnnot) {
@@ -325,12 +332,14 @@ const Visualisation = props => {
       // Refresh the list
       newAnnotations.push(newAnnot)
       setAnnotations(newAnnotations)
+      // TODO: Save in Database
     }
 
     const deleteAnnotation = (id) => {
       let deletedAnnot = annotations.find((a) => a.id === id)
       deletedAnnot.deleted = true
       setAnnotations([...annotations])
+      // TODO: Delete in Database
     }
 
     /*
@@ -350,13 +359,8 @@ const Visualisation = props => {
     }
 
     const loadCharts = (features) => {      
-      // Check which features are selected
-      /*
-      ** API call for data fetching
-      */
       // Lasagna
       const lasagnaData = {
-        // data: filterFeatures(features, Lasagna.datasets.features)
         features: filterFeatures(features, Lasagna.datasets.features),
         status: Lasagna.datasets.status
       }
@@ -385,11 +389,11 @@ const Visualisation = props => {
       })
     }
 
-    const change = (parent, feature) => {
-      if(parent) {
-        features.find(f => f.name === parent.name).items.find(i => i.name === feature.name).selected = !feature.selected
+    const change = (feature, force = null) => {
+      if(force) {
+        features.find(f => f.key === feature.key).selected = force
       } else {
-        features.find(f => f.name === feature.name).selected = !feature.selected
+        features.find(f => f.key === feature.key).selected = !feature.selected
       }
       setFeatures([...features])
     }
@@ -405,7 +409,14 @@ const Visualisation = props => {
     return (
       <>
         <div className='Visualisation'>
-          <SidePanel features={features} change={change} all={selectAll} />
+          <SidePanel 
+            features={features} 
+            regions={regions} 
+            modalities={modalities} 
+            change={change}
+            forceChange={change}
+            all={selectAll}
+          />
           <Main lasagna={lasagnaChart} pca={pcaChart} loading={loading} /> 
           <AnnotationPanel 
             annotations={annotations} 

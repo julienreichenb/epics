@@ -1,18 +1,30 @@
-import React, { useEffect } from 'react'
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form, FormGroup, FormFeedback } from 'reactstrap'
+import React, { useEffect, useRef } from 'react'
+import { Button, ButtonGroup, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form, FormGroup, FormFeedback } from 'reactstrap'
 import { FaRegSave } from 'react-icons/fa'
 import { withFormik } from 'formik'
 import * as Yup from 'yup'
 import './AddAnnotationModal.css'
+import CanvasDraw from 'react-canvas-draw'
+import Img from 'C:/Users/julien.reichenb/VSCodeProjects/epics/src/assets/img/cat.jpg'
 
 const AddAnnotationModal = props => {
+    const drawEl = useRef(null)
 
     useEffect(() => {
         if (props.annotation) {
+            console.log(props.annotation)
             props.setFieldValue('title', props.annotation.title)
             props.setFieldValue('text', props.annotation.text)
+            if (props.annotation.lines && props.annotation.lines.length > 0) {
+                props.setFieldValue('lines', props.annotation.lines)
+                // 
+                setTimeout(() => {
+                    drawEl.current.lines = props.annotation.lines   
+                    console.log(drawEl.current)                    
+                }, 300)
+            }
         }
-    }, [props.annotation])
+    }, [props.annotation, drawEl])
 
     const submit = () => {
         props.handleSubmit(props.values, props)
@@ -24,6 +36,10 @@ const AddAnnotationModal = props => {
     const toggle = () => {
         props.resetForm()
         props.toggle()
+    }
+
+    const getLines = () => {
+        props.setFieldValue('lines', [...drawEl.current.lines])
     }
 
     return (
@@ -62,6 +78,10 @@ const AddAnnotationModal = props => {
                             <FormFeedback invalid={props.touched.text && props.errors.text ? props.errors.text : null}>{props.errors.text}</FormFeedback>                            
                         </FormGroup>
                     </Form>
+                    <ButtonGroup>
+                        <Button onClick={() => drawEl.current.clear()}>Clear</Button>
+                    </ButtonGroup>
+                    <CanvasDraw ref={drawEl} brushRadius={3} imgSrc={Img} onChange={getLines} />
                 </ModalBody>
                 <ModalFooter>
                     {props.annotation
@@ -87,6 +107,7 @@ export default withFormik({
     mapPropsToValues: () => ({
         title: '',
         text: '',
+        lines: null,
     }),
     validationSchema: Yup.object().shape({
         title: Yup.string()
@@ -97,6 +118,6 @@ export default withFormik({
                     .required('Veuillez préciser votre annotation.'),        
     }),
     handleSubmit: (values, {props}) => {
-        props.save(values.title, values.text, props.parentId)
+        props.save(values.title, values.text, values.lines, props.parentId)
     },
 })(AddAnnotationModal)

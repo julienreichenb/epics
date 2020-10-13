@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { ProSidebar, Menu, SidebarHeader, SidebarContent } from 'react-pro-sidebar'
 import { FaCheckDouble, FaBan, FaFlask } from 'react-icons/fa'
-import { Button, ButtonGroup, Row, Col } from 'reactstrap'
+import { Button, ButtonGroup } from 'reactstrap'
 import FeatureList from './FeatureList'
 import Loading from './Loading'
 import './SidePanel.scss' 
 
 const SidePanel = props => {
+
     return (
         <>
             <ProSidebar className='SidePanel'>
@@ -25,7 +26,13 @@ const SidePanel = props => {
                 <SidebarContent className='SidePanelContent'>
                     {props.features.length ?  
                     <Menu>
-                        <FeatureList features={props.features} change={props.change} />                
+                        <FeatureList 
+                            features={props.features}  
+                            regions={props.regions}
+                            modalities={props.modalities}
+                            change={props.change}                        
+                            forceChange={props.change}                        
+                        />                
                     </Menu>
                     : <Loading color="info" />}               
                 </SidebarContent>               

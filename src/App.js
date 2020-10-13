@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Switch } from 'react-router-dom';
 import Footer from './Footer';
 import Header from './Header';
@@ -22,6 +22,7 @@ const App = props => {
               exact
               path="/visualisation"              
               component={Visualisation}
+              albumId={13}
             />
             <PropsRoute
               path="/"

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody } from 'reactstrap'
 import { FaTrashAlt, FaExclamationCircle } from 'react-icons/fa'
 import './DeleteAnnotationModal.css'

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Input, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap'
+import React from 'react'
+import { Button, Input, InputGroup, InputGroupAddon } from 'reactstrap'
 import { FaSearch, FaTimes } from 'react-icons/fa'
-import { Formik, withFormik } from 'formik'
+import { withFormik } from 'formik'
 import * as Yup from 'yup'
 import './SearchBarAnnotation.scss'
 
