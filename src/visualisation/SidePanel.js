@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { ProSidebar, Menu, SidebarHeader, SidebarContent } from 'react-pro-sidebar'
 import { FaCheckDouble, FaBan, FaFlask } from 'react-icons/fa'
 import { Button, ButtonGroup } from 'reactstrap'
@@ -13,7 +13,7 @@ const SidePanel = props => {
             <ProSidebar className='SidePanel'>
                 <SidebarHeader className='SidePanelHeader'>
                     <h5><FaFlask className="mr-2" />Features</h5>         
-                    <small>({props.features.length} sélectionnées)</small>
+                    <small>({props.features && props.features.length && props.selectedCpt} sélectionnées)</small>
                     <ButtonGroup>
                         <Button color="success" size="sm" onClick={() => props.all(true)}>
                             Tout <FaCheckDouble color="white" />
@@ -24,7 +24,7 @@ const SidePanel = props => {
                     </ButtonGroup>         
                 </SidebarHeader>
                 <SidebarContent className='SidePanelContent'>
-                    {props.features.length ?  
+                    {props.features ?  
                     <Menu>
                         <FeatureList 
                             features={props.features}  

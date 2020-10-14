@@ -10,8 +10,11 @@ const AnnotationList = props => {
 
     // Prepare annotations
     useEffect(() => {
+        let sortedAnnots = [...props.annotations].sort((a, b) => {
+            return a.parentId - b.parentId
+        })
         let annots = []
-        props.annotations.map((a) => {
+        sortedAnnots.map((a) => {
             const annot = {
                 id: a.id,
                 user: a.user,

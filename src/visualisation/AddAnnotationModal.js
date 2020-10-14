@@ -5,14 +5,13 @@ import { withFormik } from 'formik'
 import * as Yup from 'yup'
 import './AddAnnotationModal.css'
 import CanvasDraw from 'react-canvas-draw'
-import Img from 'C:/Users/julien.reichenb/VSCodeProjects/epics/src/assets/img/cat.jpg'
+import Img from '../assets/img/cat.jpg'
 
 const AddAnnotationModal = props => {
     const drawEl = useRef(null)
 
     useEffect(() => {
         if (props.annotation) {
-            console.log(props.annotation)
             props.setFieldValue('title', props.annotation.title)
             props.setFieldValue('text', props.annotation.text)
             if (props.annotation.lines && props.annotation.lines.length > 0) {
@@ -20,7 +19,7 @@ const AddAnnotationModal = props => {
                 // 
                 setTimeout(() => {
                     drawEl.current.lines = props.annotation.lines   
-                    console.log(drawEl.current)                    
+                    // console.log(drawEl.current)                    
                 }, 300)
             }
         }
@@ -29,7 +28,7 @@ const AddAnnotationModal = props => {
     const submit = () => {
         props.handleSubmit(props.values, props)
         setTimeout(() => {
-            props.resetForm()
+            props.toggle()
         }, 500)
     }
 
@@ -44,7 +43,7 @@ const AddAnnotationModal = props => {
 
     return (
         <>
-            <Modal size='lg' centered isOpen={props.show} toggle={toggle}>
+            <Modal id='annotModal' size='lg' centered isOpen={props.show} toggle={toggle}>
                 <ModalHeader toggle={toggle}>
                     {props.annotation ? "Modifier l'annotation" : 'Participer à la discussion'}
                 </ModalHeader>
@@ -81,7 +80,7 @@ const AddAnnotationModal = props => {
                     <ButtonGroup>
                         <Button onClick={() => drawEl.current.clear()}>Clear</Button>
                     </ButtonGroup>
-                    <CanvasDraw ref={drawEl} brushRadius={3} imgSrc={Img} onChange={getLines} />
+                    <CanvasDraw ref={drawEl} brushRadius={3} imgSrc={Img} onChange={getLines} className='mx-auto' />
                 </ModalBody>
                 <ModalFooter>
                     {props.annotation

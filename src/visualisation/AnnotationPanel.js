@@ -89,8 +89,8 @@ const AnnotationPanel = props => {
                 <SidebarContent className='SidePanelContent'>
                     {props.loading
                     ? <Loading color="info" size="sm"><small>Chargement des annotations...</small></Loading>
-                    : props.annotations.length === 0
-                    ? <div class='text-center text-muted mt-5'>
+                    :  props.annotations.length === 0
+                    ? <div className='text-center text-muted mt-5'>
                         <h5>Aucune annotation trouvée.</h5>
                     </div>
                     : <Menu iconShape='circle'>
