@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext, useRef } from 'react'
+import { Button } from 'reactstrap'
 import UserContext from './context/UserContext'
 import SidePanel from './visualisation/SidePanel'
 import Main from './visualisation/Main'
@@ -11,7 +12,8 @@ import Lasagna from './assets/charts/Lasagna.json'
 
 const Visualisation = props => {
     // Init
-    const user = useContext(UserContext);
+    const user = useContext(UserContext)
+    const main = useRef(null)
     const [loading, setLoading] = useState(true)
     // Features
     const [features, setFeatures] = useState([])
@@ -22,6 +24,7 @@ const Visualisation = props => {
     // Charts
     const [lasagnaData, setLasagnaData] = useState(null)
     const [pcaChart, setPcaChart] = useState(null)
+    const [pcaImg, setPcaImg] = useState(null)
     const [lasagnaChart, setLasagnaChart] = useState(null)
 
     // Get features & annotations
@@ -36,30 +39,44 @@ const Visualisation = props => {
 
     // Update Vega
     useEffect(() => {
-      if(pcaChart && lasagnaChart) setLoading(false)
+      if(pcaChart && lasagnaChart) {
+        setPcaImg(main.current.getChart('pca'))
+        setLoading(false)
+      }
     }, [lasagnaChart, pcaChart])
 
     const apiCalls = () => {
-      loadFeatures()
+      PCAonly()
+      // loadFeatures()
       loadAnnotations()
     }
 
+    /**
+     * Testing purpose only
+     */
+    const PCAonly = () => {
+      setLasagnaData([])
+      setLasagnaChart([])
+      setLoading(false)
+      setupPCA()
+    }
+
     const loadFeatures = async () => {
-      const data = await backend.getLasagnaData(props.albumId)
-      const featuresNames = [... new Set(data.features.map((f) => f.feature_id))]
-      setModalities([ ... new Set(data.features.map((m) => m.Modality))])
-      setRegions([ ... new Set(data.features.map((r) => r.ROI))])
       const newFeatures = []
-      featuresNames.map((f) => {
-        const feature = {
-          key: f,
-          name: data.features.find((x) => x.feature_id === f).feature_name,
-          selected: true,
-        }
-        newFeatures.push(feature)
-      })
-      setLasagnaData(data)
-      setFeatures(newFeatures)
+        const data = await backend.getLasagnaData(props.albumId)
+        const featuresNames = [... new Set(data.features.map((f) => f.feature_id))]
+        setModalities([ ... new Set(data.features.map((m) => m.Modality))])
+        setRegions([ ... new Set(data.features.map((r) => r.ROI))])
+        featuresNames.map((f) => {
+          const feature = {
+            key: f,
+            name: data.features.find((x) => x.feature_id === f).feature_name,
+            selected: true,
+          }
+          newFeatures.push(feature)
+        })
+        setLasagnaData(data)
+        setFeatures(newFeatures)
     }
 
     const loadAnnotations = () => {
@@ -224,13 +241,14 @@ const Visualisation = props => {
             change={change}
             forceChange={change}
             all={selectAll}
-          />
-          <Main lasagna={lasagnaChart} pca={pcaChart} loading={loading} /> 
+          />        
+          <Main lasagna={lasagnaChart} pca={pcaChart} loading={loading} ref={main} /> 
           <AnnotationPanel 
             annotations={annotations} 
             saveAnnotation={saveAnnotation} 
             deleteAnnotation={deleteAnnotation}
-            user={user} />      
+            user={user}
+            chartsImg={[pcaImg]} />      
         </div>
       </>
     )

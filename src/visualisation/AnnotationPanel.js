@@ -109,6 +109,7 @@ const AnnotationPanel = props => {
                     toggle={() => cleanSaveModal()}
                     annotation={editingAnnotation}
                     save={saveAnnotation}
+                    chartsImg={props.chartsImg}
                 />
                 <DeleteAnnotationModal 
                     show={showDeleteModal} 

@@ -1,20 +1,35 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useRef, forwardRef, useImperativeHandle } from 'react'
 import VegaChart from './VegaChart'
 import Loading from './Loading'
 import './Main.css' 
 
-const Main = props => {
+const Main = (props, ref) => {
+    const pca = useRef(null)
+    const lasagna = useRef(null)
+
+    useImperativeHandle(ref, () => ({
+        getChart(type) {
+            switch(type) {
+                case 'pca':
+                    return pca.current.getChart()
+                case 'lasagna':
+                    // return lasagna.current.getChart()
+                default:
+                    return
+            }
+        }
+      }));
 
     return (
         <>
-            <div className='Main'>                
+            <div id='main' className='Main'>                
                 {props.loading 
                 ? <Loading color="dark">
                     <h3>Chargement des graphiques...</h3>                
                 </Loading>
                 : <>                        
-                    <VegaChart title={'Radiomics Heatmap'} chart={props.lasagna} type='vega-lite' />
-                    <VegaChart title={'Principle Component Analysis'} chart={props.pca} type='vega' />
+                    <VegaChart ref={lasagna} title={'Radiomics Heatmap'} chart={props.lasagna} type='vega-lite' />
+                    <VegaChart ref={pca} title={'Principle Component Analysis'} chart={props.pca} type='vega' />
                 </>
                 }
             </div>
@@ -22,4 +37,4 @@ const Main = props => {
     )
 }
 
-export default Main
+export default forwardRef(Main)

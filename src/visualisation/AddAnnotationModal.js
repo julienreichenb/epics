@@ -1,14 +1,14 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Button, ButtonGroup, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form, FormGroup, FormFeedback } from 'reactstrap'
-import { FaRegSave } from 'react-icons/fa'
+import { FaRegSave, FaTimes, FaStepBackward } from 'react-icons/fa'
 import { withFormik } from 'formik'
 import * as Yup from 'yup'
 import './AddAnnotationModal.css'
 import CanvasDraw from 'react-canvas-draw'
-import Img from '../assets/img/cat.jpg'
 
 const AddAnnotationModal = props => {
     const drawEl = useRef(null)
+    const [pca, setPca] = useState(null)
 
     useEffect(() => {
         if (props.annotation) {
@@ -16,16 +16,20 @@ const AddAnnotationModal = props => {
             props.setFieldValue('text', props.annotation.text)
             if (props.annotation.lines && props.annotation.lines.length > 0) {
                 props.setFieldValue('lines', props.annotation.lines)
-                // 
-                setTimeout(() => {
-                    drawEl.current.lines = props.annotation.lines   
-                    // console.log(drawEl.current)                    
-                }, 300)
+                redraw()
             }
         }
     }, [props.annotation, drawEl])
 
+    useEffect(() => {
+        convertURIToImageData(props.chartsImg[0]).then((img) => {
+            setPca(img)
+        })
+        console.log(pca)
+    }, [props.show])
+
     const submit = () => {
+        getLines()
         props.handleSubmit(props.values, props)
         setTimeout(() => {
             props.toggle()
@@ -38,8 +42,30 @@ const AddAnnotationModal = props => {
     }
 
     const getLines = () => {
-        props.setFieldValue('lines', [...drawEl.current.lines])
+        props.setFieldValue('lines', drawEl.current.getSaveData())
     }
+
+    const redraw = () => {
+        setTimeout(() => {
+            drawEl.current.loadSaveData(props.annotation.lines, true)
+        }, 200)
+    }
+    
+    const convertURIToImageData = (URI) => {
+        return new Promise((resolve, reject) => {
+          if (URI == null) return reject();
+          const canvas = document.createElement('canvas'),
+              context = canvas.getContext('2d'),
+              image = new Image();
+          image.addEventListener('load', () => {
+            canvas.width = image.width;
+            canvas.height = image.height;
+            context.drawImage(image, 0, 0, canvas.width, canvas.height);
+            resolve(context.getImageData(0, 0, canvas.width, canvas.height));
+          }, false);
+          image.src = URI;
+        });
+      }
 
     return (
         <>
@@ -77,10 +103,22 @@ const AddAnnotationModal = props => {
                             <FormFeedback invalid={props.touched.text && props.errors.text ? props.errors.text : null}>{props.errors.text}</FormFeedback>                            
                         </FormGroup>
                     </Form>
-                    <ButtonGroup>
-                        <Button onClick={() => drawEl.current.clear()}>Clear</Button>
+                    <ButtonGroup className='w-100 text-center'>
+                        <Button color='danger' onClick={() => drawEl.current.clear()}>
+                            <FaTimes className='mr-2' /> Effacer les lignes
+                        </Button>
+                        <Button color='info' onClick={() => drawEl.current.undo()}>
+                            <FaStepBackward className='mr-2' /> Effacer la dernière ligne
+                        </Button>
                     </ButtonGroup>
-                    <CanvasDraw ref={drawEl} brushRadius={3} imgSrc={Img} onChange={getLines} className='mx-auto' />
+                    { pca && 
+                        <CanvasDraw ref={drawEl} 
+                            brushRadius={3} 
+                            imgSrc={props.chartsImg} 
+                            className='mx-auto' 
+                            style={{width: pca.width, height: pca.height}}
+                        />
+                    }
                 </ModalBody>
                 <ModalFooter>
                     {props.annotation
