@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useImperativeHandle, forwardRef } from 'react'
 import { ProSidebar, Menu, SidebarHeader, SidebarContent } from 'react-pro-sidebar'
 import { FaComments, FaEyeSlash, FaPlus } from 'react-icons/fa'
 import { Row, Col, Button } from 'reactstrap'
@@ -9,7 +9,7 @@ import DeleteAnnotationModal from './DeleteAnnotationModal'
 import SearchBarAnnotation from './SearchBarAnnotation'
 import './AnnotationPanel.scss'
 
-const AnnotationPanel = props => {
+const AnnotationPanel = (props, ref) => {
     const [collapsed, setCollapsed] = useState(false)
     const [showSaveModal, setShowSaveModal] = useState(false)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -27,6 +27,11 @@ const AnnotationPanel = props => {
         setSearch(term)
     }
 
+    const displayAnnotation = (a) => {
+        setCollapsed(true)
+        props.displayAnnotation(a)
+    }
+
     const answerAnnotation = (parentId) => {
         setEditingAnnotation(null)
         setParentId(parentId)
@@ -35,6 +40,7 @@ const AnnotationPanel = props => {
 
     const askEditAnnotation = (a) => {
         setEditingAnnotation(a)
+        setParentId(a.parentId)
         setShowSaveModal(true)
     }
 
@@ -60,6 +66,15 @@ const AnnotationPanel = props => {
         setParentId(null)
         setEditingAnnotation(null)
     }
+
+    useImperativeHandle(ref, () => ({
+        askDelete(annotation) {
+            askDeleteAnnotation(annotation)
+        },
+        askEdit(annotation) {
+            askEditAnnotation(annotation)
+        }
+    }));
 
     return (
         <>
@@ -101,6 +116,7 @@ const AnnotationPanel = props => {
                             answerAnnotation={answerAnnotation} 
                             editAnnotation={askEditAnnotation}
                             deleteAnnotation={askDeleteAnnotation}
+                            displayAnnotation={displayAnnotation}
                         />
                     </Menu>}                                 
                 </SidebarContent>  
@@ -122,4 +138,4 @@ const AnnotationPanel = props => {
     )
 }
 
-export default AnnotationPanel
+export default forwardRef(AnnotationPanel)

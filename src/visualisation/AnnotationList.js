@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { FaComment, FaUser, FaReply, FaTrashAlt, FaEdit } from 'react-icons/fa'
+import { FaComment, FaUser, FaReply, FaTrashAlt, FaEdit, FaEye } from 'react-icons/fa'
 import './AnnotationList.scss'
 import { SubMenu } from 'react-pro-sidebar'
 import { Row, Col, Badge, Button } from 'reactstrap'
+import AnnotationHighlight from './AnnotationHighlight'
 import moment from 'moment'
 
 const AnnotationList = props => {
@@ -31,6 +32,7 @@ const AnnotationList = props => {
                 annot.answers = []
                 annots.push(annot)
             } else {
+                annot.parentId = a.parentId
                 annots.find((x) => x.id === a.parentId).answers.push(annot)
             }
         })
@@ -45,6 +47,10 @@ const AnnotationList = props => {
         return list.sort((a, b) => {
             return b.date - a.date
         })
+    }
+
+    const displayAnnotation = (annotation) => {
+        props.displayAnnotation(annotation)
     }
 
     const answerAnnotation = (parentAnnotation) => {
@@ -64,11 +70,21 @@ const AnnotationList = props => {
         return (
             <div className='py-2'>
                 <Row>
-                    <Col>{annot.deleted
+                    <Col xs='5'>{annot.deleted
                         ? deleted(annot)
                         : <span>{annot.title.length > 40 ? annot.title.substring(0, 40) + '...' : annot.title}</span>}                        
                     </Col>    
+                    <Col>
+                    {annot.lines &&
+                        <AnnotationHighlight />                            
+                    }
+                    </Col>
                     <Col xs='3'>
+                        {!annot.deleted &&
+                        <Button color='info' className='small-btn' onClick={() => displayAnnotation(annot)}>
+                            <FaEye />
+                        </Button>
+                        }
                         {/* !annot.deleted && (props.user.id === a.user || props.user.isAdmin) && */
                         <>
                             <Button color='danger' className='small-btn' onClick={() => deleteAnnotation(annot)}>

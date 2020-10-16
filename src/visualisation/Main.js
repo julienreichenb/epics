@@ -1,38 +1,98 @@
-import React, { useRef, forwardRef, useImperativeHandle } from 'react'
+import React, { useRef, forwardRef, useImperativeHandle, useState, useEffect, createRef } from 'react'
 import VegaChart from './VegaChart'
 import Loading from './Loading'
-import './Main.css' 
+import DisplayedAnnotation from './DisplayedAnnotation'
+import useDynamicRefs from 'use-dynamic-refs';
+import './Main.scss' 
 
 const Main = (props, ref) => {
-    const pca = useRef(null)
-    const lasagna = useRef(null)
+    const [getRef, setRef] =  useDynamicRefs();
+
+    const [displayAnnotation, setDisplayedAnnotation] = useState(null)
+    const [images, setImages] = useState(null)
+
+    useEffect(() => {
+        const temp = []
+        props.images.map((img, index) => {
+            convertURIToImageData(props.images[index].img).then((image) => {
+                image.id = img.id
+                image.raw = img.img
+                temp.push(image)
+            })
+        })
+        setImages(temp)
+    }, [props.images])
 
     useImperativeHandle(ref, () => ({
         getChart(type) {
-            switch(type) {
-                case 'pca':
-                    return pca.current.getChart()
-                case 'lasagna':
-                    // return lasagna.current.getChart()
-                default:
-                    return
-            }
-        }
-      }));
+            return getRef(type).current.getChart()            
+        },
+        displayAnnotation(annotation) {
+            setDisplayedAnnotation(annotation)
+        },
+        closeAnnotation() {
+            closeAnnotation()
+        },
+    }));
+
+    const closeAnnotation = () => {
+        setDisplayedAnnotation(null)
+    }
+
+    const deleteAnnotation = () => {
+        setDisplayedAnnotation(null)
+        props.askDelete(displayAnnotation)
+    }
+
+    const editAnnotation = () => {
+        setDisplayedAnnotation(null)
+        props.askEdit(displayAnnotation)
+    }
+
+    const convertURIToImageData = (URI) => {
+        return new Promise((resolve, reject) => {
+          if (URI == null) return reject();
+          const canvas = document.createElement('canvas'),
+              context = canvas.getContext('2d'),
+              image = new Image();
+          image.addEventListener('load', () => {
+            canvas.width = image.width;
+            canvas.height = image.height;
+            context.drawImage(image, 0, 0, canvas.width, canvas.height);
+            resolve(context.getImageData(0, 0, canvas.width, canvas.height));
+          }, false);
+          image.src = URI;
+        });
+    }
 
     return (
         <>
-            <div id='main' className='Main'>                
-                {props.loading 
+            <div className='Main'>    
+                {displayAnnotation ?
+                <>
+                    <DisplayedAnnotation 
+                        annotation={displayAnnotation} 
+                        close={closeAnnotation}
+                        delete={deleteAnnotation}
+                        edit={editAnnotation}
+                        images={images}
+                    />
+                </>
+                :
+                props.loading 
                 ? <Loading color="dark">
                     <h3>Chargement des graphiques...</h3>                
                 </Loading>
-                : <>                        
-                    <VegaChart ref={lasagna} title={'Radiomics Heatmap'} chart={props.lasagna} type='vega-lite' />
-                    <VegaChart ref={pca} title={'Principle Component Analysis'} chart={props.pca} type='vega' />
-                </>
-                }
-            </div>
+                :              
+                <div className='charts'>
+                    {props.charts.map((c) => {                    
+                        return (
+                            <VegaChart key={c.id} ref={setRef(c.id)} title={c.title} chart={c.chart} type={c.type} />
+                        )
+                    })}                      
+                </div>                
+                }   
+            </div>       
         </>
     )
 }

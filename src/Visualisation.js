@@ -20,6 +20,7 @@ const Visualisation = props => {
     const [regions, setRegions] = useState([])
     const [modalities, setModalities] = useState([])
     // Annotations
+    const annotationPannel = useRef(null)
     const [annotations, setAnnotations] = useState([])
     // Charts
     const [lasagnaData, setLasagnaData] = useState(null)
@@ -40,8 +41,8 @@ const Visualisation = props => {
     // Update Vega
     useEffect(() => {
       if(pcaChart && lasagnaChart) {
-        setPcaImg(main.current.getChart('pca'))
         setLoading(false)
+        setPcaImg(main.current.getChart('pca'))
       }
     }, [lasagnaChart, pcaChart])
 
@@ -83,6 +84,7 @@ const Visualisation = props => {
       /*
       ** Temporary solution, should be done through the API
       ** albumId should be added
+      ** JSON.parse(lines) !!
       */
       const annots = [
         {
@@ -129,6 +131,18 @@ const Visualisation = props => {
       setAnnotations(annots)
     }
 
+    const displayAnnotation = (annotation) => {
+      main.current.displayAnnotation(annotation)
+    }
+
+    const askDelete = (annotation) => {
+      annotationPannel.current.askDelete(annotation)
+    }
+
+    const askEdit = (annotation) => {
+      annotationPannel.current.askEdit(annotation)
+    }
+
     const saveAnnotation = (title, text, lines, parentId, currentAnnot) => {
       let newAnnotations = [...annotations]
       const newAnnot = {
@@ -150,7 +164,7 @@ const Visualisation = props => {
       // Refresh the list
       newAnnotations.push(newAnnot)
       setAnnotations(newAnnotations)
-      // TODO: Save in Database
+      // TODO: Save in Database -> STRINGIFY LINES !
     }
 
     const deleteAnnotation = (id) => {
@@ -242,11 +256,38 @@ const Visualisation = props => {
             forceChange={change}
             all={selectAll}
           />        
-          <Main lasagna={lasagnaChart} pca={pcaChart} loading={loading} ref={main} /> 
+          <Main 
+            ref={main}
+            charts={[
+              {
+                id: 'lasagna',
+                title: 'Radiomics Heatmap',
+                chart: lasagnaChart,
+                type: 'vega-lite',
+              },
+              {
+                id: 'pca',
+                title: 'Principle Component Analysis',
+                chart: pcaChart,
+                type: 'vega',
+              }
+            ]}
+            images={[
+              {
+                id: 'pca',
+                img: pcaImg
+              }
+            ]}
+            loading={loading}
+            askDelete={askDelete}
+            askEdit={askEdit}
+          /> 
           <AnnotationPanel 
+            ref={annotationPannel}
             annotations={annotations} 
+            displayAnnotation={displayAnnotation}
             saveAnnotation={saveAnnotation} 
-            deleteAnnotation={deleteAnnotation}
+            deleteAnnotation={deleteAnnotation}        
             user={user}
             chartsImg={[pcaImg]} />      
         </div>

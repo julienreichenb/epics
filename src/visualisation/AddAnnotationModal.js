@@ -25,15 +25,16 @@ const AddAnnotationModal = props => {
         convertURIToImageData(props.chartsImg[0]).then((img) => {
             setPca(img)
         })
-        console.log(pca)
     }, [props.show])
 
     const submit = () => {
         getLines()
         props.handleSubmit(props.values, props)
-        setTimeout(() => {
-            props.toggle()
-        }, 500)
+        props.validateForm().then((errors) => {            
+            if (Object.keys(errors).length === 0) {                
+                toggle() 
+            }
+        })        
     }
 
     const toggle = () => {
@@ -42,13 +43,14 @@ const AddAnnotationModal = props => {
     }
 
     const getLines = () => {
-        props.setFieldValue('lines', drawEl.current.getSaveData())
+        const strLines = drawEl.current.getSaveData()
+        props.setFieldValue('lines', JSON.parse(strLines).lines.length === 0 ? null : strLines)
     }
 
     const redraw = () => {
         setTimeout(() => {
             drawEl.current.loadSaveData(props.annotation.lines, true)
-        }, 200)
+        }, 100)
     }
     
     const convertURIToImageData = (URI) => {
@@ -65,7 +67,7 @@ const AddAnnotationModal = props => {
           }, false);
           image.src = URI;
         });
-      }
+    }
 
     return (
         <>
@@ -149,7 +151,7 @@ export default withFormik({
     validationSchema: Yup.object().shape({
         title: Yup.string()
                     .min(5, 'Le titre doit contenir au moins 5 caractères.')
-                    .max(30, 'Le titre ne doit pas dépasser 60 caractères.')
+                    .max(30, 'Le titre ne doit pas dépasser 30 caractères.')
                     .required("Vous devez donner un titre à l'annotation."),
         text: Yup.string()
                     .required('Veuillez préciser votre annotation.'),        
