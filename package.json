@@ -24,6 +24,7 @@
     "react-vega": "^7.4.1",
     "react-vega-lite": "^6.1.0",
     "reactstrap": "^8.5.1",
+    "use-dynamic-refs": "^1.0.0",
     "vega": "^5.15.0",
     "vega-lite": "^4.15.0",
     "yup": "^0.29.3"

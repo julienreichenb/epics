@@ -23,6 +23,7 @@ $breakpoint-xl: 1200px !default;
     max-height: calc(94vh - 50px) !important;
     background-color: $sidebar-bg-color;
     box-shadow: #CCCCCC -2px 0px 15px;
+    z-index: 1048 !important;
 
     .SidePanelHeader {
         direction: ltr;
