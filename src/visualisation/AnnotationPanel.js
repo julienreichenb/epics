@@ -73,6 +73,9 @@ const AnnotationPanel = (props, ref) => {
         },
         askEdit(annotation) {
             askEditAnnotation(annotation)
+        },
+        askAnswer(annotation) {
+            answerAnnotation(annotation)
         }
     }));
 

@@ -49,6 +49,11 @@ const Main = (props, ref) => {
         props.askEdit(displayAnnotation)
     }
 
+    const answerAnnotation = () => {
+        setDisplayedAnnotation(null)
+        props.askAnswer(displayAnnotation)
+    }
+
     const convertURIToImageData = (URI) => {
         return new Promise((resolve, reject) => {
           if (URI == null) return reject();
@@ -75,6 +80,7 @@ const Main = (props, ref) => {
                         close={closeAnnotation}
                         delete={deleteAnnotation}
                         edit={editAnnotation}
+                        answer={answerAnnotation}
                         images={images}
                     />
                 </>

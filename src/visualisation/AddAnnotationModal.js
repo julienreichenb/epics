@@ -6,26 +6,37 @@ import * as Yup from 'yup'
 import './AddAnnotationModal.css'
 import CanvasDraw from 'react-canvas-draw'
 import CanvasOptions from './CanvasOptions'
+import useDynamicRefs from 'use-dynamic-refs';
 
 const AddAnnotationModal = props => {
-    const drawEl = useRef(null)
-    const [pca, setPca] = useState(null)
+    const [getRef, setRef] =  useDynamicRefs();
+    const [images, setImages] = useState([])
     const [canvasOptions, setCanvasOptions] = useState({size: 0, color: ''})
 
     useEffect(() => {
         if (props.annotation) {
             props.setFieldValue('title', props.annotation.title)
             props.setFieldValue('text', props.annotation.text)
-            if (props.annotation.lines && props.annotation.lines.length > 0) {
+            if (props.annotation.lines) {
                 props.setFieldValue('lines', props.annotation.lines)
-                redraw()
+                setTimeout(() => {
+                    JSON.parse(props.annotation.lines).map((l) => {
+                        redraw(l)
+                    })
+                }, 200)                
             }
         }
-    }, [props.annotation, drawEl])
+    }, [props.annotation])
 
     useEffect(() => {
-        convertURIToImageData(props.chartsImg[0]).then((img) => {
-            setPca(img)
+        const tImages = []
+        props.chartsImg.map((i) => {
+            convertURIToImageData(i.img).then((img) => {      
+                img.id = i.id
+                img.raw = i.img
+                tImages.push(img)      
+                setImages(tImages)
+            })
         })
     }, [props.show])
 
@@ -45,14 +56,31 @@ const AddAnnotationModal = props => {
     }
 
     const getLines = () => {
-        const strLines = drawEl.current.getSaveData()
-        props.setFieldValue('lines', JSON.parse(strLines).lines.length === 0 ? null : strLines)
+        const lines = []
+        images.map((i) => {         
+            let line = getRef(i.id).current.getSaveData()
+            if (JSON.parse(line).lines.length === 0)
+                line = null
+            lines.push({
+                id: i.id,
+                lines: line
+            })
+        })
+        props.setFieldValue('lines', JSON.stringify(lines))
     }
 
-    const redraw = () => {
-        setTimeout(() => {
-            drawEl.current.loadSaveData(props.annotation.lines, true)
-        }, 100)
+    const redraw = (line) => {
+        getRef(line.id).current.loadSaveData(line.lines, true)                
+    }
+
+    const undo = (id) => {
+        getRef(id).current.undo()
+    }
+
+    const clearAll = () => {
+        images.map((i) => {
+            getRef(i.id).current.clear()
+        })
     }
 
     const updateCanvasOptions = (options) => {
@@ -112,25 +140,29 @@ const AddAnnotationModal = props => {
                         </FormGroup>
                     </Form>
                     <ButtonGroup className='w-100 text-center'>
-                        <Button color='danger' onClick={() => drawEl.current.clear()}>
+                        <Button color='danger' onClick={() => clearAll()}>
                             <FaTimes className='mr-2' /> Effacer les lignes
                         </Button>
-                        <Button color='info' onClick={() => drawEl.current.undo()}>
-                            <FaStepBackward className='mr-2' /> Effacer la dernière ligne
-                        </Button>
                     </ButtonGroup>
-                    { pca && 
-                        <>
-                            <CanvasOptions options={canvasOptions} change={updateCanvasOptions} />
-                            <CanvasDraw ref={drawEl} 
-                                brushColor={canvasOptions.color}
-                                brushRadius={canvasOptions.size} 
-                                imgSrc={props.chartsImg} 
-                                className='mx-auto' 
-                                style={{width: pca.width, height: pca.height}}
-                            />
-                        </>                                               
-                    }
+                    { images.length > 0 && 
+                    images.map((i, index) => {
+                            return (
+                                <>
+                                    <CanvasOptions key={index +'-options'} id={i.id} options={canvasOptions} change={updateCanvasOptions} undo={undo} />
+                                    <CanvasDraw 
+                                        key={index + '-canvas'}
+                                        ref={setRef(i.id)} 
+                                        lazyRadius={0}
+                                        brushColor={canvasOptions.color}
+                                        brushRadius={canvasOptions.size} 
+                                        imgSrc={i.raw} 
+                                        className='mx-auto' 
+                                        style={{width: i.width, height: i.height}}
+                                    />
+                                </>            
+                            )
+                        })                    
+                    }                                                                       
                 </ModalBody>
                 <ModalFooter>
                     {props.annotation

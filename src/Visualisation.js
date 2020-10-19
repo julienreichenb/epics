@@ -143,6 +143,10 @@ const Visualisation = props => {
       annotationPannel.current.askEdit(annotation)
     }
 
+    const askAnswer = (annotation) => {
+      annotationPannel.current.askAnswer(annotation)
+    }
+
     const saveAnnotation = (title, text, lines, parentId, currentAnnot) => {
       let newAnnotations = [...annotations]
       const newAnnot = {
@@ -281,6 +285,7 @@ const Visualisation = props => {
             loading={loading}
             askDelete={askDelete}
             askEdit={askEdit}
+            askAnswer={askAnswer}
           /> 
           <AnnotationPanel 
             ref={annotationPannel}
@@ -289,7 +294,12 @@ const Visualisation = props => {
             saveAnnotation={saveAnnotation} 
             deleteAnnotation={deleteAnnotation}        
             user={user}
-            chartsImg={[pcaImg]} />      
+            chartsImg={[
+              {
+                id: 'pca',
+                img: pcaImg
+              }
+            ]} />      
         </div>
       </>
     )

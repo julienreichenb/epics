@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { FormGroup, Form, Label, Input, Row, Col } from 'reactstrap'
+import { FormGroup, Form, Label, Input, Row, Col, Button } from 'reactstrap'
 import { withFormik } from 'formik'
 import './CanvasOptions.css' 
+import { FaUndo } from 'react-icons/fa'
 
 const CanvasOptions = props => {
-    const [sizeOptions, setSizeOptions] = useState([1, 2, 3, 4, 5])
-
     useEffect(() => {
         props.handleSubmit()
     }, [])
@@ -14,12 +13,16 @@ const CanvasOptions = props => {
         props.handleChange(e)
         props.handleSubmit()
     }
+
+    const undo = () => {
+        props.undo(props.id)
+    }
     
     return (
         <>
             <Form className='my-2'>
                 <Row>
-                    <Col xs='6'>
+                    <Col>
                         <FormGroup>
                             <Label for="size">Taille du trait</Label>
                             <Input type="select" 
@@ -28,7 +31,7 @@ const CanvasOptions = props => {
                                 value={props.values.size}
                                 onChange={handleChange}
                             >
-                                {sizeOptions.map((o) => {
+                                {[1,2,3,4,5].map((o) => {
                                     return (
                                         <option key={o}>{o}</option>
                                     )
@@ -39,14 +42,16 @@ const CanvasOptions = props => {
                     <Col>
                         <FormGroup>
                             <Label for="color">Couleur du trait</Label>
-                            <Input 
-                                type="color" 
+                            <Input type="color" 
                                 name="color" 
                                 id="color"
                                 value={props.values.color}
                                 onChange={handleChange}
                             />
                         </FormGroup>
+                    </Col>
+                    <Col>
+                        <Button className='mt-3' color='info' onClick={undo}>Effacer la dernière ligne</Button>
                     </Col>
                 </Row>                           
             </Form>

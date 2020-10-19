@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Card, CardBody, CardHeader, Button, ButtonGroup, Badge } from 'reactstrap'
-import { FaTimes, FaTrashAlt, FaEdit, FaUser } from 'react-icons/fa'
+import { FaTimes, FaTrashAlt, FaEdit, FaUser, FaReply } from 'react-icons/fa'
 import './DisplayedAnnotation.scss'
 import useDynamicRefs from 'use-dynamic-refs';
 import moment from 'moment'
@@ -10,17 +10,17 @@ const DisplayedAnnotation = props => {
     const [getRef, setRef] =  useDynamicRefs();
 
     useEffect(() => {
-        if (props.annotation && props.annotation.lines)
-            redraw()
+        if (props.annotation && props.annotation.lines) {
+            setTimeout(() => {
+                JSON.parse(props.annotation.lines).map((l) => {
+                    redraw(l)
+                })
+            }, 200)
+        }
     }, [props.annotation])
 
-    const redraw = () => {
-        props.images.map((i) => {
-            setTimeout(() => {
-                getRef(i.id).current.loadSaveData(props.annotation.lines, true)                
-            }, 100)
-        })
-        
+    const redraw = (line) => {
+        getRef(line.id + '-canvas').current.loadSaveData(line.lines, true)                
     }
 
     const deleteAnnotation = () => {
@@ -29,6 +29,10 @@ const DisplayedAnnotation = props => {
 
     const editAnnotation = () => {
         props.edit()
+    }
+
+    const answerAnnotation = () => {
+        props.answer()
     }
 
     const date = moment(props.annotation.date).format('D.MM.YYYY à hh:mm:ss')
@@ -41,19 +45,28 @@ const DisplayedAnnotation = props => {
                         <div className='d-flex justify-content-between'>
                             <h3>{props.annotation.title}</h3>
                             <div>
-                                <Badge color={props.annotation.answers.length > 0 ? 'warning' : 'secondary'} className='mr-2'>
-                                    {props.annotation.answers.length} {props.annotation.answers.length > 1 ? 'réponses' : 'réponse'}                                    
-                                </Badge>
-                                {/* Check if user owns the annotation or if is admin */      
-                                <ButtonGroup className='mr-2'>                      
-                                    <Button color='danger' onClick={() => deleteAnnotation()}>
-                                        <FaTrashAlt />
-                                    </Button>
-                                    <Button color='dark' onClick={() => editAnnotation()}>
-                                        <FaEdit />
-                                    </Button>
-                                </ButtonGroup>
+                                {props.annotation.answers && 
+                                    <Badge color={props.annotation.answers.length > 0 ? 'warning' : 'secondary'} className='mr-2'>
+                                        {props.annotation.answers.length} {props.annotation.answers.length > 1 ? 'réponses' : 'réponse'}                                    
+                                    </Badge>
                                 }
+                                <ButtonGroup className='mr-2'>                      
+                                    {/* Check if user owns the annotation or if is admin */  
+                                    <>    
+                                        <Button color='danger' onClick={() => deleteAnnotation()}>
+                                            <FaTrashAlt />
+                                        </Button>
+                                        <Button color='dark' onClick={() => editAnnotation()}>
+                                            <FaEdit />
+                                        </Button>
+                                    </>
+                                    }
+                                    {props.annotation.answers &&
+                                        <Button color='primary' onClick={() => answerAnnotation()}>
+                                            <FaReply /> Répondre
+                                        </Button>
+                                    }
+                                </ButtonGroup>
                                 <Button color='info' onClick={props.close}>
                                     <FaTimes className='mr-1 mb-1' />Fermer
                                 </Button>
@@ -78,7 +91,7 @@ const DisplayedAnnotation = props => {
                     return (
                         <CanvasDraw
                             key={index}
-                            ref={setRef(image.id)}
+                            ref={setRef(image.id + '-canvas')}
                             imgSrc={image.raw} 
                             disabled
                             className='mx-auto' 
