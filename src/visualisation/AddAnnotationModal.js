@@ -5,10 +5,12 @@ import { withFormik } from 'formik'
 import * as Yup from 'yup'
 import './AddAnnotationModal.css'
 import CanvasDraw from 'react-canvas-draw'
+import CanvasOptions from './CanvasOptions'
 
 const AddAnnotationModal = props => {
     const drawEl = useRef(null)
     const [pca, setPca] = useState(null)
+    const [canvasOptions, setCanvasOptions] = useState({size: 0, color: ''})
 
     useEffect(() => {
         if (props.annotation) {
@@ -50,6 +52,10 @@ const AddAnnotationModal = props => {
             drawEl.current.loadSaveData(props.annotation.lines, true)
         }, 200)
     }
+
+    const updateCanvasOptions = (options) => {
+        setCanvasOptions(options)
+    }
     
     const convertURIToImageData = (URI) => {
         return new Promise((resolve, reject) => {
@@ -78,7 +84,7 @@ const AddAnnotationModal = props => {
                         <FormGroup>
                             <Label for="title">Titre</Label>
                             <Input type="text" 
-                                name="title" 
+                                name="title"                               
                                 id="title" 
                                 placeholder="Titre de votre annotation..." 
                                 value={props.values.title}
@@ -112,12 +118,16 @@ const AddAnnotationModal = props => {
                         </Button>
                     </ButtonGroup>
                     { pca && 
-                        <CanvasDraw ref={drawEl} 
-                            brushRadius={3} 
-                            imgSrc={props.chartsImg} 
-                            className='mx-auto' 
-                            style={{width: pca.width, height: pca.height}}
-                        />
+                        <>
+                            <CanvasOptions options={canvasOptions} change={updateCanvasOptions} />
+                            <CanvasDraw ref={drawEl} 
+                                brushColor={canvasOptions.color}
+                                brushRadius={canvasOptions.size} 
+                                imgSrc={props.chartsImg} 
+                                className='mx-auto' 
+                                style={{width: pca.width, height: pca.height}}
+                            />
+                        </>                                               
                     }
                 </ModalBody>
                 <ModalFooter>
