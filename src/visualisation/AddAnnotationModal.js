@@ -34,10 +34,13 @@ const AddAnnotationModal = props => {
             convertURIToImageData(i.img).then((img) => {      
                 img.id = i.id
                 img.raw = i.img
-                tImages.push(img)      
-                setImages(tImages)
+                tImages.push(img)   
+                setTimeout(() => {
+                    setImages(tImages)
+                }, 100)   
             })
         })
+        console.log(images)
     }, [props.show])
 
     const submit = () => {

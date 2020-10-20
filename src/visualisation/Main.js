@@ -25,7 +25,7 @@ const Main = (props, ref) => {
 
     useImperativeHandle(ref, () => ({
         getChart(type) {
-            return getRef(type).current.getChart()            
+            return getRef(type + '-chart').current.getChart(type)     
         },
         displayAnnotation(annotation) {
             setDisplayedAnnotation(annotation)
@@ -86,16 +86,19 @@ const Main = (props, ref) => {
                 </>
                 :
                 props.loading 
-                ? <Loading color="dark">
+                ? 
+                <Loading color="dark">
                     <h3>Chargement des graphiques...</h3>                
                 </Loading>
                 :              
                 <div className='charts'>
-                    {props.charts.map((c) => {                    
+                    {props.charts.map((c) => {      
                         return (
-                            <VegaChart key={c.id} ref={setRef(c.id)} title={c.title} chart={c.chart} type={c.type} />
+                            <div id={c.id} key={c.id}>
+                                <VegaChart ref={setRef(c.id + '-chart')} title={c.title} chart={c.chart} type={c.type} />
+                            </div>
                         )
-                    })}                      
+                    })}                 
                 </div>                
                 }   
             </div>       

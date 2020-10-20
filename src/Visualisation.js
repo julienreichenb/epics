@@ -9,6 +9,7 @@ import backend from './services/backend'
 // Chart Specs
 import PCA from './assets/charts/PCA.json'
 import Lasagna from './assets/charts/Lasagna.json'
+import { setIn } from 'formik'
 
 const Visualisation = props => {
     // Init
@@ -23,32 +24,33 @@ const Visualisation = props => {
     const annotationPannel = useRef(null)
     const [annotations, setAnnotations] = useState([])
     // Charts
-    const [lasagnaData, setLasagnaData] = useState(null)
     const [pcaChart, setPcaChart] = useState(null)
     const [pcaImg, setPcaImg] = useState(null)
+    const [lasagnaData, setLasagnaData] = useState(null)
     const [lasagnaChart, setLasagnaChart] = useState(null)
+    const [lasagnaImg, setLasagnaImg] = useState(null)
 
     // Get features & annotations
     useEffect(() => {
       apiCalls()
     }, [])
 
-    // Refresh charts on feature change
+    // Refresh charts on feature changes
     useEffect(() => {
       if (lasagnaData) loadCharts(features)
     }, [features])
 
     // Update Vega
     useEffect(() => {
-      if(pcaChart && lasagnaChart) {
-        setLoading(false)
-        setPcaImg(main.current.getChart('pca'))
+      if (pcaChart && lasagnaChart) {
+        setLoading(false)       
+        loadImages()
       }
     }, [lasagnaChart, pcaChart])
 
     const apiCalls = () => {
-      PCAonly()
-      // loadFeatures()
+      // PCAonly()
+      loadFeatures()
       loadAnnotations()
     }
 
@@ -60,6 +62,22 @@ const Visualisation = props => {
       setLasagnaChart([])
       setLoading(false)
       setupPCA()
+    }
+
+    const loadImages = () => {
+      setTimeout(() => {
+        let pca = null
+        let lasagna = null
+        const waiting = setInterval(() => {
+          pca = main.current.getChart('pca')
+          lasagna = main.current.getChart('lasagna')
+          if (pca !== null && lasagna !== null) {
+            setPcaImg(pca)
+            setLasagnaImg(lasagna)
+            clearInterval(waiting)
+          }
+        }, 1000)
+      }, 2000)
     }
 
     const loadFeatures = async () => {
@@ -280,6 +298,10 @@ const Visualisation = props => {
               {
                 id: 'pca',
                 img: pcaImg
+              },
+              {
+                id: 'lasagna',
+                img: lasagnaImg
               }
             ]}
             loading={loading}
@@ -298,6 +320,10 @@ const Visualisation = props => {
               {
                 id: 'pca',
                 img: pcaImg
+              },
+              {
+                id: 'lasagna',
+                img: lasagnaImg
               }
             ]} />      
         </div>

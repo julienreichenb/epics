@@ -27,7 +27,7 @@ const CanvasOptions = props => {
                             <Label for="size">Taille du trait</Label>
                             <Input type="select" 
                                 name="size"
-                                id="size"
+                                id={'size-' + props.id}
                                 value={props.values.size}
                                 onChange={handleChange}
                             >
@@ -44,14 +44,16 @@ const CanvasOptions = props => {
                             <Label for="color">Couleur du trait</Label>
                             <Input type="color" 
                                 name="color" 
-                                id="color"
+                                id={'color-' + props.id}
                                 value={props.values.color}
                                 onChange={handleChange}
                             />
                         </FormGroup>
                     </Col>
                     <Col>
-                        <Button className='mt-3' color='info' onClick={undo}>Effacer la dernière ligne</Button>
+                        <Button className='mt-3' color='info' onClick={undo}>
+                            <FaUndo className='mt-1' /> Effacer la dernière ligne
+                        </Button>
                     </Col>
                 </Row>                           
             </Form>

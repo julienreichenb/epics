@@ -1,12 +1,12 @@
-import React, { forwardRef, useImperativeHandle } from 'react'
+import React, { forwardRef, useEffect, useImperativeHandle } from 'react'
 import { Vega, VegaLite } from 'react-vega'
 import './VegaChart.scss'
 
 const VegaChart = (props, ref) => {
 
     useImperativeHandle(ref, () => ({
-        getChart() {
-            return document.getElementsByTagName('canvas')[0].toDataURL()
+        getChart(id) {
+            return document.getElementById(id).getElementsByTagName('canvas')[0].toDataURL()
         }
       }));
 

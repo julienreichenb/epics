@@ -7,7 +7,6 @@ import Loading from './Loading'
 import './SidePanel.scss' 
 
 const SidePanel = props => {
-
     return (
         <>
             <ProSidebar className='SidePanel'>
@@ -15,10 +14,10 @@ const SidePanel = props => {
                     <h5><FaFlask className="mr-2" />Features</h5>         
                     <small>({props.features && props.features.length && props.selectedCpt} sélectionnées)</small>
                     <ButtonGroup>
-                        <Button color="success" size="sm" onClick={() => props.all(true)}>
+                        <Button disabled={props.features.length === 0} color="success" size="sm" onClick={() => props.all(true)}>
                             Tout <FaCheckDouble color="white" />
                         </Button>
-                        <Button color="danger" size="sm" onClick={() => props.all(false)}>
+                        <Button disabled={props.features.length === 0} color="danger" size="sm" onClick={() => props.all(false)}>
                             Aucun <FaBan color="white" />
                         </Button>
                     </ButtonGroup>         

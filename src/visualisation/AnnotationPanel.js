@@ -11,6 +11,7 @@ import './AnnotationPanel.scss'
 
 const AnnotationPanel = (props, ref) => {
     const [collapsed, setCollapsed] = useState(false)
+    const [imgLoaded, setImgLoaded] = useState(false)
     const [showSaveModal, setShowSaveModal] = useState(false)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [parentId, setParentId] = useState(null)
@@ -22,6 +23,11 @@ const AnnotationPanel = (props, ref) => {
     useEffect(() => {
         setSearch('')
     }, [collapsed])
+
+    // Check if images have been loaded
+    useEffect(() => {
+        setImgLoaded(missingImages())
+    }, [props.chartsImg])
 
     const getSearch = (term) => {
         setSearch(term)
@@ -71,6 +77,14 @@ const AnnotationPanel = (props, ref) => {
         setEditingAnnotation(null)
     }
 
+    const missingImages = () => {
+        let isLoaded = true
+        props.chartsImg.map((i) => {
+            if (i.img === null) isLoaded = false
+        })
+        return isLoaded
+    }
+
     useImperativeHandle(ref, () => ({
         askDelete(annotation) {
             askDeleteAnnotation(annotation, true)
@@ -94,7 +108,7 @@ const AnnotationPanel = (props, ref) => {
                         {!collapsed &&
                         <>
                             <Col xs="3" className='text-right'>
-                                <Button color='success' onClick={() => setShowSaveModal(true)}>
+                                <Button color='success' onClick={() => setShowSaveModal(true)} disabled={!imgLoaded}>
                                     <FaPlus className='mr-2'/>Commenter
                                 </Button>                                 
                             </Col>
