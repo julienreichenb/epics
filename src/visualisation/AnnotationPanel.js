@@ -50,9 +50,13 @@ const AnnotationPanel = (props, ref) => {
         props.saveAnnotation(title, text, lines, parentId, editingAnnotation)
     }
 
-    const askDeleteAnnotation = (a) => {
-        setDeletingAnnotation(a)
-        setShowDeleteModal(true)
+    const askDeleteAnnotation = (a, willBeDeleted) => {
+        if (willBeDeleted) {
+            setDeletingAnnotation(a)
+            setShowDeleteModal(true)
+        } else {
+            props.deleteAnnotation(a.id, false)
+        }
     }
 
     const deleteAnnotation = () => {
@@ -69,7 +73,7 @@ const AnnotationPanel = (props, ref) => {
 
     useImperativeHandle(ref, () => ({
         askDelete(annotation) {
-            askDeleteAnnotation(annotation)
+            askDeleteAnnotation(annotation, true)
         },
         askEdit(annotation) {
             askEditAnnotation(annotation)

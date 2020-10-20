@@ -11,7 +11,8 @@ const endpoints = {
   labels: `${baseEndpoint}/labels`,
   tasks: `${baseEndpoint}/tasks`,
   charts: {
-    lasagna: `${baseEndpoint}`
+    lasagna: `${baseEndpoint}`,
+    pca: `${baseEndpoint}`,
   }
 };
 
@@ -19,6 +20,14 @@ class Backend {
   async getLasagnaData(albumId) {
     try {
       const url = `${endpoints.charts.lasagna}/${albumId}/lasagna`;
+      return await request(url); // Add token management
+    } catch (err) {
+      throw err; // Just throw it for now
+    }
+  }
+  async getPCAData(albumId) {
+    try {
+      const url = `${endpoints.charts.pca}/${albumId}/pca`;
       return await request(url); // Add token management
     } catch (err) {
       throw err; // Just throw it for now

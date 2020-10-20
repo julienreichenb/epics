@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FaComment, FaUser, FaReply, FaTrashAlt, FaEdit, FaEye } from 'react-icons/fa'
+import { FaComment, FaUser, FaReply, FaTrashAlt, FaEdit, FaEye, FaRecycle } from 'react-icons/fa'
 import './AnnotationList.scss'
 import { SubMenu } from 'react-pro-sidebar'
 import { Row, Col, Badge, Button } from 'reactstrap'
@@ -61,8 +61,8 @@ const AnnotationList = props => {
         props.editAnnotation(annotation)
     }
 
-    const deleteAnnotation = (annotation) => {
-        props.deleteAnnotation(annotation)
+    const deleteAnnotation = (annotation, willBeDeleted) => {
+        props.deleteAnnotation(annotation, willBeDeleted)
     }
 
     const annotationTitle = (annot) => {
@@ -85,15 +85,21 @@ const AnnotationList = props => {
                             <FaEye />
                         </Button>
                         }
-                        {/* !annot.deleted && (props.user.id === a.user || props.user.isAdmin) && */
+                        {/* props.user.id === a.user || props.user.isAdmin && */
+                        annot.deleted 
+                        ?
+                            <Button color='success' size='sm' onClick={() => deleteAnnotation(annot, false)}>
+                                <FaRecycle /> Réactiver
+                            </Button>
+                        :                        
                         <>
-                            <Button color='danger' className='small-btn' onClick={() => deleteAnnotation(annot)}>
+                            <Button color='danger' className='small-btn' onClick={() => deleteAnnotation(annot, true)}>
                                 <FaTrashAlt />
                             </Button>
                             <Button color='dark' className='small-btn' onClick={() => editAnnotation(annot)}>
                                 <FaEdit />
                             </Button>
-                        </>
+                        </>                        
                         }
                     </Col>
                 </Row>

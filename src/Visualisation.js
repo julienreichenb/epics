@@ -171,9 +171,9 @@ const Visualisation = props => {
       // TODO: Save in Database -> STRINGIFY LINES !
     }
 
-    const deleteAnnotation = (id) => {
+    const deleteAnnotation = (id, willBeDeleted = true) => {
       let deletedAnnot = annotations.find((a) => a.id === id)
-      deletedAnnot.deleted = true
+      deletedAnnot.deleted = willBeDeleted
       setAnnotations([...annotations])
       // TODO: Delete in Database
     }

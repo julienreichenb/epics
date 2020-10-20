@@ -148,15 +148,19 @@ const AddAnnotationModal = props => {
                     images.map((i, index) => {
                             return (
                                 <>
-                                    <CanvasOptions key={index +'-options'} id={i.id} options={canvasOptions} change={updateCanvasOptions} undo={undo} />
+                                    <CanvasOptions key={index +'-options'} 
+                                        id={i.id} 
+                                        options={canvasOptions} 
+                                        change={updateCanvasOptions} 
+                                        undo={undo} />
                                     <CanvasDraw 
                                         key={index + '-canvas'}
-                                        ref={setRef(i.id)} 
+                                        ref={setRef(i.id)}
                                         lazyRadius={0}
                                         brushColor={canvasOptions.color}
-                                        brushRadius={canvasOptions.size} 
-                                        imgSrc={i.raw} 
-                                        className='mx-auto' 
+                                        brushRadius={canvasOptions.size}
+                                        imgSrc={i.raw}
+                                        className='mx-auto'
                                         style={{width: i.width, height: i.height}}
                                     />
                                 </>            
