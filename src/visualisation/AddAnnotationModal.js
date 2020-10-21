@@ -1,17 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, ButtonGroup, Modal, ModalHeader, ModalBody, ModalFooter, Input, Label, Form, FormGroup, FormFeedback } from 'reactstrap'
-import { FaRegSave, FaTimes, FaStepBackward } from 'react-icons/fa'
+import { FaRegSave, FaTimes } from 'react-icons/fa'
 import { withFormik } from 'formik'
 import * as Yup from 'yup'
-import './AddAnnotationModal.css'
-import CanvasDraw from 'react-canvas-draw'
-import CanvasOptions from './CanvasOptions'
+import './AddAnnotationModal.scss'
+import ChartAnnotationCanvas from './ChartAnnotationCanvas'
 import useDynamicRefs from 'use-dynamic-refs';
 
 const AddAnnotationModal = props => {
     const [getRef, setRef] =  useDynamicRefs();
     const [images, setImages] = useState([])
-    const [canvasOptions, setCanvasOptions] = useState({size: 0, color: ''})
 
     useEffect(() => {
         if (props.annotation) {
@@ -76,18 +74,10 @@ const AddAnnotationModal = props => {
         getRef(line.id).current.loadSaveData(line.lines, true)                
     }
 
-    const undo = (id) => {
-        getRef(id).current.undo()
-    }
-
     const clearAll = () => {
         images.map((i) => {
             getRef(i.id).current.clear()
         })
-    }
-
-    const updateCanvasOptions = (options) => {
-        setCanvasOptions(options)
     }
     
     const convertURIToImageData = (URI) => {
@@ -147,29 +137,21 @@ const AddAnnotationModal = props => {
                             <FaTimes className='mr-2' /> Effacer les lignes
                         </Button>
                     </ButtonGroup>
+                    <div className='all-canvas'>
                     { images.length > 0 && 
                     images.map((i, index) => {
                             return (
-                                <>
-                                    <CanvasOptions key={index +'-options'} 
-                                        id={i.id} 
-                                        options={canvasOptions} 
-                                        change={updateCanvasOptions} 
-                                        undo={undo} />
-                                    <CanvasDraw 
+                                <div className='canvas-drawing mb-3 pt-3'>
+                                    <ChartAnnotationCanvas 
                                         key={index + '-canvas'}
                                         ref={setRef(i.id)}
-                                        lazyRadius={0}
-                                        brushColor={canvasOptions.color}
-                                        brushRadius={canvasOptions.size}
-                                        imgSrc={i.raw}
-                                        className='mx-auto'
-                                        style={{width: i.width, height: i.height}}
-                                    />
-                                </>            
+                                        image={i}
+                                    />                                    
+                                </div>            
                             )
                         })                    
-                    }                                                                       
+                    }                  
+                    </div>                                                                        
                 </ModalBody>
                 <ModalFooter>
                     {props.annotation

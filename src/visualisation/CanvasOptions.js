@@ -50,8 +50,8 @@ const CanvasOptions = props => {
                             />
                         </FormGroup>
                     </Col>
-                    <Col>
-                        <Button className='mt-3' color='info' onClick={undo}>
+                    <Col className='my-auto'>
+                        <Button color='info' onClick={undo}>
                             <FaUndo className='mt-1' /> Effacer la dernière ligne
                         </Button>
                     </Col>
