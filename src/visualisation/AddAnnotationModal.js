@@ -139,7 +139,7 @@ const AddAnnotationModal = props => {
                     </ButtonGroup>
                     <div className='all-canvas'>
                     { images.length > 0 && 
-                    images.map((i, index) => {
+                        images.map((i, index) => {
                             return (
                                 <div className='canvas-drawing mb-3 pt-3'>
                                     <ChartAnnotationCanvas 
