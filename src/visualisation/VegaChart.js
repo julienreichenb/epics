@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle } from 'react'
+import React, { forwardRef, useImperativeHandle } from 'react'
 import { Vega, VegaLite } from 'react-vega'
 import './VegaChart.scss'
 

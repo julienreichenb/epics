@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { ProSidebar, Menu, SidebarHeader, SidebarContent } from 'react-pro-sidebar'
 import { FaCheckDouble, FaBan, FaFlask } from 'react-icons/fa'
 import { Button, ButtonGroup } from 'reactstrap'

@@ -1,4 +1,4 @@
-import React, { useRef, forwardRef, useImperativeHandle, useState, useEffect, createRef } from 'react'
+import React, { forwardRef, useImperativeHandle, useState, useEffect, createRef } from 'react'
 import VegaChart from './VegaChart'
 import Loading from './Loading'
 import DisplayedAnnotation from './DisplayedAnnotation'
@@ -92,7 +92,7 @@ const Main = (props, ref) => {
                 </Loading>
                 :              
                 <div className='charts'>
-                    {props.charts.map((c) => {      
+                    {props.charts.map((c) => {     
                         return (
                             <div id={c.id} key={c.id}>
                                 <VegaChart ref={setRef(c.id + '-chart')} title={c.title} chart={c.chart} type={c.type} />

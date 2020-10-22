@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { FaHighlighter } from 'react-icons/fa'
 import { Tooltip } from 'reactstrap'
 import './AnnotationHighlight.css'

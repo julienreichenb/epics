@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext, useRef } from 'react'
-import { Button } from 'reactstrap'
 import UserContext from './context/UserContext'
 import SidePanel from './visualisation/SidePanel'
 import Main from './visualisation/Main'
@@ -9,7 +8,6 @@ import backend from './services/backend'
 // Chart Specs
 import PCA from './assets/charts/PCA.json'
 import Lasagna from './assets/charts/Lasagna.json'
-import { setIn } from 'formik'
 
 const Visualisation = props => {
     // Init
@@ -65,27 +63,32 @@ const Visualisation = props => {
     }
 
     const loadImages = () => {
-      setTimeout(() => {
-        let pca = null
-        let lasagna = null
-        const waiting = setInterval(() => {
-          pca = main.current.getChart('pca')
-          lasagna = main.current.getChart('lasagna')
-          if (pca !== null && lasagna !== null) {
-            setPcaImg(pca)
-            setLasagnaImg(lasagna)
-            clearInterval(waiting)
-          }
-        }, 1000)
-      }, 2000)
+      const waitingMain = setInterval(() => {
+        if (main.current) {
+          clearInterval(waitingMain)
+          let pca = null
+          let lasagna = null
+          const waitingCharts = setInterval(() => {
+            try {
+              pca = main.current.getChart('pca')
+              lasagna = main.current.getChart('lasagna')
+              if (pca !== null && lasagna !== null) {
+                clearInterval(waitingCharts)
+                setPcaImg(pca)
+                setLasagnaImg(lasagna)
+              }
+            } catch {}            
+          }, 1000)
+        }
+      }, 1000)
     }
 
     const loadFeatures = async () => {
       const newFeatures = []
         const data = await backend.getLasagnaData(props.albumId)
-        const featuresNames = [... new Set(data.features.map((f) => f.feature_id))]
-        setModalities([ ... new Set(data.features.map((m) => m.Modality))])
-        setRegions([ ... new Set(data.features.map((r) => r.ROI))])
+        const featuresNames = [...new Set(data.features.map((f) => f.feature_id))]
+        setModalities([...new Set(data.features.map((m) => m.Modality))])
+        setRegions([...new Set(data.features.map((r) => r.ROI))])
         featuresNames.map((f) => {
           const feature = {
             key: f,
@@ -202,11 +205,12 @@ const Visualisation = props => {
       // Other charts ?      
     }
 
-    const setupLasagna = (features) => {
+    const setupLasagna = async (features) => {
       const properData = {
-        features: filterFeatures(features, lasagnaData.features),
+        features: await filterFeatures(features, lasagnaData.features),
         status: lasagnaData.outcomes
       }
+      console.log(properData.features)
       const lasagnaSpec = { ...Lasagna }
       lasagnaSpec.data = { "name": ["features", "status"] }
       setLasagnaChart({
@@ -236,12 +240,12 @@ const Visualisation = props => {
     /*
     ** Only consider the features selected by the user
     */
-    const filterFeatures = (features, data) => {
-      const selectedFeatures = features.filter((f) => f.selected)
+    const filterFeatures = async (features, data) => {
+      const selectedFeatures = await features.filter((f) => f.selected)
       const filteredData = []
-      data.map((d) => {
+      await data.map((d) => {
         selectedFeatures.map((f) => {
-          if (d.feature_name === f.name) {
+          if (d.feature_id === f.key) {
             filteredData.push(d)
           }
         })

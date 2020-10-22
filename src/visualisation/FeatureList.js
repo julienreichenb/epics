@@ -57,47 +57,48 @@ const FeatureList = props => {
                 {parentFeatures.map((f) => {                        
                     return f.items 
                     ? 
-                        <SubMenu 
-                            title={f.name} 
-                            key={f.name} 
-                            className="SidePanelSubMenu"
-                        >
-                            <MenuItem className='text-center border-bottom border-light'>
-                                <ButtonGroup size='sm'>
-                                    <Button color='success' onClick={() => bulkSelect(f, true)}>
-                                        Tout
-                                    </Button>
-                                    <Button color='danger' onClick={() => bulkSelect(f, false)}>
-                                        Aucun
-                                    </Button>
-                                </ButtonGroup>        
-                            </MenuItem>
-                            {f.items.map((i) => {
-                                return (
-                                    <MenuItem key={i.key} onClick={() => props.change(i)} className="SidePanelItem">
-                                        <Row noGutters>
-                                            <Col xs="10">
-                                                <small className={i.selected ? 'selected' : ''}>{formatName(i.name, 32)}</small>
-                                            </Col>
-                                            <Col style={{textAlign: 'right'}}>
-                                            {i.selected ? <FaCheck color={green} /> : <FaTimes color={red} />}
-                                            </Col>
-                                        </Row>
-                                    </MenuItem>
-                                )
-                            })}
-                        </SubMenu>
+                    <SubMenu 
+                        title={f.name} 
+                        key={f.name} 
+                        
+                        className="SidePanelSubMenu"
+                    >
+                        <MenuItem className='text-center border-bottom border-light'>
+                            <ButtonGroup size='sm'>
+                                <Button color='success' onClick={() => bulkSelect(f, true)}>
+                                    Tout
+                                </Button>
+                                <Button color='danger' onClick={() => bulkSelect(f, false)}>
+                                    Aucun
+                                </Button>
+                            </ButtonGroup>        
+                        </MenuItem>
+                        {f.items.map((i) => {
+                            return (
+                                <MenuItem key={i.key} onClick={() => props.change(i)} className="SidePanelItem">
+                                    <Row noGutters>
+                                        <Col xs="10">
+                                            <small className={i.selected ? 'selected' : ''}>{formatName(i.name, 32)}</small>
+                                        </Col>
+                                        <Col style={{textAlign: 'right'}}>
+                                        {i.selected ? <FaCheck color={green} /> : <FaTimes color={red} />}
+                                        </Col>
+                                    </Row>
+                                </MenuItem>
+                            )
+                        })}
+                    </SubMenu>
                     :                      
-                        <MenuItem key={f.key} onClick={() => props.change(f)} className="SidePanelItem">                                        
-                             <Row>
-                                <Col xs="8">
-                                    <span className={f.selected ? 'selected' : ''}>{formatName(f.name, 16)}</span>
-                                </Col>
-                                <Col style={{textAlign: 'right'}}>
-                                    {f.selected ? <FaCheck color={green} /> : <FaTimes color={red} />}
-                                </Col>
-                            </Row>
-                        </MenuItem>                                                                              
+                    <MenuItem key={f.key} onClick={() => props.change(f)} className="SidePanelItem">                                        
+                            <Row>
+                            <Col xs="8">
+                                <span className={f.selected ? 'selected' : ''}>{formatName(f.name, 16)}</span>
+                            </Col>
+                            <Col style={{textAlign: 'right'}}>
+                                {f.selected ? <FaCheck color={green} /> : <FaTimes color={red} />}
+                            </Col>
+                        </Row>
+                    </MenuItem>                                                                              
                 })}                            
             </div>
         </>

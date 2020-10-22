@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { FormGroup, Form, Label, Input, Row, Col, Button } from 'reactstrap'
 import { withFormik } from 'formik'
 import './CanvasOptions.css' 

@@ -23,7 +23,7 @@
           "title": "Features"
         },
         "y": {
-          "field": "feature_name",
+          "field": "feature_id",
           "type": "nominal",
           "title": "Features",
           "axis": {
