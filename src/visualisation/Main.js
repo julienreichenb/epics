@@ -95,7 +95,14 @@ const Main = (props, ref) => {
                     {props.charts.map((c) => {     
                         return (
                             <div id={c.id} key={c.id}>
-                                <VegaChart ref={setRef(c.id + '-chart')} title={c.title} chart={c.chart} type={c.type} />
+                                <VegaChart ref={setRef(c.id + '-chart')} 
+                                    id={c.id}
+                                    title={c.title} 
+                                    chart={c.chart} 
+                                    type={c.type} 
+                                    clusterable={c.clusterable}             
+                                    reloadImages={props.reloadImages}                       
+                                />
                             </div>
                         )
                     })}                 

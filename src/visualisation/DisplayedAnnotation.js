@@ -20,7 +20,8 @@ const DisplayedAnnotation = props => {
     }, [props.annotation])
 
     const redraw = (line) => {
-        getRef(line.id + '-canvas').current.loadSaveData(line.lines, true)                
+        if (line.lines)
+            getRef(line.id + '-canvas').current.loadSaveData(line.lines, true)                
     }
 
     const deleteAnnotation = () => {

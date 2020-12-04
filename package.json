@@ -10,6 +10,8 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "bootstrap": "^4.5.2",
+    "data-forge": "^1.8.12",
+    "data-forge-fs": "0.0.8",
     "formik": "^2.1.5",
     "moment": "^2.28.0",
     "node-sass": "^4.14.1",
@@ -24,9 +26,12 @@
     "react-vega": "^7.4.1",
     "react-vega-lite": "^6.1.0",
     "reactstrap": "^8.5.1",
+    "shaman": "^0.3.2",
+    "simple-statistics": "^7.3.2",
     "use-dynamic-refs": "^1.0.0",
     "vega": "^5.15.0",
     "vega-lite": "^4.15.0",
+    "vega-tooltip": "^0.24.2",
     "yup": "^0.29.3"
   },
   "scripts": {

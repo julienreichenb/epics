@@ -38,7 +38,6 @@ const AddAnnotationModal = props => {
                 }, 100)   
             })
         })
-        console.log(images)
     }, [props.show])
 
     const submit = () => {
@@ -71,7 +70,8 @@ const AddAnnotationModal = props => {
     }
 
     const redraw = (line) => {
-        getRef(line.id).current.loadSaveData(line.lines, true)                
+        if (line.lines)
+            getRef(line.id).current.loadSaveData(line.lines, true)                
     }
 
     const clearAll = () => {

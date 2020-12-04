@@ -41,7 +41,7 @@ const Visualisation = props => {
     // Update Vega
     useEffect(() => {
       if (pcaChart && lasagnaChart) {
-        setLoading(false)       
+        setLoading(false)      
         loadImages()
       }
     }, [lasagnaChart, pcaChart])
@@ -210,7 +210,6 @@ const Visualisation = props => {
         features: await filterFeatures(features, lasagnaData.features),
         status: lasagnaData.outcomes
       }
-      console.log(properData.features)
       const lasagnaSpec = { ...Lasagna }
       lasagnaSpec.data = { "name": ["features", "status"] }
       setLasagnaChart({
@@ -290,12 +289,14 @@ const Visualisation = props => {
                 title: 'Radiomics Heatmap',
                 chart: lasagnaChart,
                 type: 'vega-lite',
+                clusterable: true,
               },
               {
                 id: 'pca',
                 title: 'Principle Component Analysis',
                 chart: pcaChart,
                 type: 'vega',
+                clusterable: false,
               }
             ]}
             images={[
@@ -312,6 +313,7 @@ const Visualisation = props => {
             askDelete={askDelete}
             askEdit={askEdit}
             askAnswer={askAnswer}
+            reloadImages={loadImages}
           /> 
           <AnnotationPanel 
             ref={annotationPannel}

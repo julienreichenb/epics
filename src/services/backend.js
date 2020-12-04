@@ -1,6 +1,6 @@
 import { request } from './common';
 
-const baseEndpoint = 'http://153.109.130.143:5000/charts/'
+const baseEndpoint = 'https://backend.quantimage2.ehealth.hevs.ch'
 
 const endpoints = {
   analyze: `${baseEndpoint}/analyze`,
@@ -10,16 +10,13 @@ const endpoints = {
   models: `${baseEndpoint}/models`,
   labels: `${baseEndpoint}/labels`,
   tasks: `${baseEndpoint}/tasks`,
-  charts: {
-    lasagna: `${baseEndpoint}`,
-    pca: `${baseEndpoint}`,
-  }
-};
+  charts: `${baseEndpoint}/charts`,
+}
 
 class Backend {
   async getLasagnaData(albumId) {
     try {
-      const url = `${endpoints.charts.lasagna}/${albumId}/lasagna`;
+      const url = `${endpoints.charts}/${albumId}/lasagna`;
       return await request(url); // Add token management
     } catch (err) {
       throw err; // Just throw it for now
@@ -27,7 +24,7 @@ class Backend {
   }
   async getPCAData(albumId) {
     try {
-      const url = `${endpoints.charts.pca}/${albumId}/pca`;
+      const url = `${endpoints.charts}/${albumId}/pca`;
       return await request(url); // Add token management
     } catch (err) {
       throw err; // Just throw it for now

@@ -11,11 +11,12 @@
       "encoding": {
         "x": {
           "field": "PatientID",
-          "type": "nominal",
+          "type": "ordinal",
           "title": null,          
           "axis": {
             "labels": false
-          }
+          },
+          "sort": "ascending"
         },
         "color": {
           "field": "feature_value",
@@ -29,7 +30,12 @@
           "axis": {
             "labels": false
           }
-        }
+        },
+        "tooltip":[
+          { "field": "PatientID", "type": "ordinal", "title": "Patient" },
+          { "field": "feature_id", "type": "nominal", "title": "Feature" },
+          { "field": "feature_value", "type": "quantitative", "title": "Valeur" }
+        ]
       }
     },
     {
@@ -42,8 +48,9 @@
       "encoding": {
         "x": {
           "field": "PatientID",
-          "type": "nominal",
-          "title": "Patients"
+          "type": "ordinal",
+          "title": "Patients",
+          "sort": "ascending"
         },
         "color": {
           "field": "Outcome",
