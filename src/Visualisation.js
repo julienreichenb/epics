@@ -8,6 +8,7 @@ import backend from './services/backend'
 // Chart Specs
 import PCA from './assets/charts/PCA.json'
 import Lasagna from './assets/charts/Lasagna.json'
+import PCAJS from 'pca-js'
 
 const Visualisation = props => {
     // Init
@@ -201,7 +202,7 @@ const Visualisation = props => {
 
     const loadCharts = (features) => {      
       setupLasagna(features)
-      setupPCA(features)
+      setupPCA(['CT', 'PT'])
       // Other charts ?      
     }
 
@@ -218,9 +219,29 @@ const Visualisation = props => {
       })
     }
 
-    const setupPCA = (features) => {
+    const setupPCA = async (pcaSpecs) => {
+      const selection = await filterPCASpecs(pcaSpecs, lasagnaData.features)
+      // Get patients raw values for each dimension
+      const firstDimension = []
+      const secondDimension = []
+      lasagnaData.outcomes.map((p) => {
+        firstDimension.push(selection[0].filter((s) => s.PatientID === p.PatientID).map((a) => a.feature_value))
+        secondDimension.push(selection[1].filter((s) => s.PatientID === p.PatientID).map((a) => a.feature_value))
+      })
+      // Compute PCA values for each dimension
+      const firstVectors = PCAJS.getEigenVectors(firstDimension)
+      const firstAdjusted = PCAJS.computeAdjustedData(firstDimension, firstVectors[0]).adjustedData[0]
+      const secondVectors = PCAJS.getEigenVectors(secondDimension)
+      const secondAdjusted = PCAJS.computeAdjustedData(secondDimension, secondVectors[0]).adjustedData[0]
+      const formattedPCAData = lasagnaData.outcomes.map((value, index, array) => {
+        const patientData = { ...value }
+        patientData.Score1 = firstAdjusted[index]
+        patientData.Score2 = secondAdjusted[index]
+        patientData["Symbol(vega_id)"] = Math.floor(Math.random() * 10000)
+        return patientData
+      })
       const pcaData = {
-        source: PCA.data[0].values,
+        source: formattedPCAData,
       }
       const pcaSpec = { ...PCA }
       pcaSpec.data = [
@@ -250,6 +271,12 @@ const Visualisation = props => {
         })
       }) 
       return filteredData
+    }
+
+    const filterPCASpecs = async (specs, data) => {
+      const firstSet = await data.filter((f) => f.feature_id.includes(specs[0]))
+      const secondSet = await data.filter((f) => f.feature_id.includes(specs[1]))
+      return [firstSet, secondSet]
     }
 
     const change = (feature, force = null) => {
