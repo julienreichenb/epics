@@ -177,6 +177,9 @@ const Visualisation = props => {
         title,
         text,
         lines,
+        pcaSpes: pcaChart,
+        lasagnaSpec: lasagnaChart,
+        selectedFeatures: features.filter((f) => f.selected).map(({ feature_id }) => feature_id),
         user: 5, // Get current user ID
         date: new Date(),
       }
@@ -251,6 +254,8 @@ const Visualisation = props => {
       ]
       pcaSpec.height = 500
       pcaSpec.width = 500
+      pcaSpec.axes[0].title = 'First Principal Component (' + pcaSpecs[0] + ', ' + (PCAJS.computePercentageExplained(firstVectors, firstVectors[0]) * 100).toFixed(2) + '%' + ')'
+      pcaSpec.axes[1].title = 'First Principal Component (' + pcaSpecs[1] + ', ' + (PCAJS.computePercentageExplained(secondVectors, secondVectors[0]) * 100).toFixed(2) + '%' + ')'
       setPcaChart({
         data: pcaData,
         spec: pcaSpec,

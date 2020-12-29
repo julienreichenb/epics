@@ -4,6 +4,7 @@ import { Vega, VegaLite } from 'react-vega'
 import { Handler } from 'vega-tooltip'
 import ClusterOptions from './ClusterOptions'
 import clustering from '../services/clustering'
+import ruleTemplate from '../assets/charts/RuleTemplate.json'
 import './VegaChart.scss'
 
 const VegaChart = (props, ref) => {
@@ -24,6 +25,7 @@ const VegaChart = (props, ref) => {
     useEffect(() => {
         if (!props.clusterable || !clusterSpec) return
         if (!clusterNumber || clusterNumber === 0) {
+            resetRules()
             clusterSpec.vconcat.map((v) => {
                 v.encoding.x.sort = "ascending"
             })
@@ -35,9 +37,21 @@ const VegaChart = (props, ref) => {
         })
         const clusters = clustering.getClusters(data, clusterNumber)
         const order = getNewOrder(clusters)
+        resetRules()
+        const ids = []
         clusterSpec.vconcat.map((v) => {
             v.encoding.x.sort = order
+            if(v.layer) {
+                let patientId = 1
+                for (let i = 0; i < clusters.length - 1; i++) {
+                    patientId += clusters[i].length
+                    ids.push(order[patientId])
+                }
+            }
         })
+        const newFilter = { ...ruleTemplate }
+        newFilter.transform[0].filter.oneOf = ids
+        clusterSpec.vconcat[0].layer.push(newFilter)
         setClusterSpec({ ...clusterSpec })
         props.reloadImages()
     }, [clusterNumber])
@@ -51,6 +65,15 @@ const VegaChart = (props, ref) => {
         })
         const orderedPatients = indexToIds(indexOrder)
         return orderedPatients
+    }
+
+    const resetRules = () => {
+        clusterSpec.vconcat.map((v) => {
+            if (v.layer) {
+                const temp = v.layer[0]
+                v.layer = [temp]
+            }
+        })
     }
 
     const indexToIds = (orderArray) => {

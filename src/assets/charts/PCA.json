@@ -712,8 +712,7 @@
 			"grid": true,
 			"domain": false,
 			"orient": "bottom",
-			"tickCount": 5,
-			"title": "First Principal Component (CT)"
+			"tickCount": 5
 		},
 		{
 			"scale": "y",
@@ -721,8 +720,7 @@
 			"domain": false,
 			"orient": "left",
 			"tickCount": 5,
-			"titlePadding": 5,
-			"title": "First Principal Component (PET)"
+			"titlePadding": 5
 		}
 	]
 }

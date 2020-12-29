@@ -5,38 +5,46 @@
       "data": {
         "name": "features"
       },
-      "mark": "rect",
-      "height": 600,
-      "width": 800,
       "encoding": {
         "x": {
-          "field": "PatientID",
-          "type": "ordinal",
-          "title": null,          
-          "axis": {
-            "labels": false
-          },
           "sort": "ascending"
-        },
-        "color": {
-          "field": "feature_value",
-          "type": "quantitative",
-          "title": "Features"
-        },
-        "y": {
-          "field": "feature_id",
-          "type": "nominal",
-          "title": "Features",
-          "axis": {
-            "labels": false
-          }
-        },
-        "tooltip":[
-          { "field": "PatientID", "type": "ordinal", "title": "Patient" },
-          { "field": "feature_id", "type": "nominal", "title": "Feature" },
-          { "field": "feature_value", "type": "quantitative", "title": "Valeur" }
-        ]
+        }
+      },
+      "layer": [
+        {
+        "mark": "rect",
+        "height": 600,
+        "width": 800,
+        "encoding": {
+          "x": {
+            "field": "PatientID",
+            "type": "ordinal",
+            "title": null,          
+            "axis": {
+              "labels": false
+            }
+          },
+          "color": {
+            "field": "feature_value",
+            "type": "quantitative",
+            "title": "Features"
+          },
+          "y": {
+            "field": "feature_id",
+            "type": "nominal",
+            "title": "Features",
+            "axis": {
+              "labels": false
+            }
+          },
+          "tooltip":[
+            { "field": "PatientID", "type": "ordinal", "title": "Patient" },
+            { "field": "feature_id", "type": "nominal", "title": "Feature" },
+            { "field": "feature_value", "type": "quantitative", "title": "Valeur" }
+          ]
+        }
       }
+    ]
     },
     {
       "data": {
