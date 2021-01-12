@@ -240,6 +240,7 @@ const Visualisation = props => {
         const patientData = { ...value }
         patientData.Score1 = firstAdjusted[index]
         patientData.Score2 = secondAdjusted[index]
+        patientData.Outcome = patientData.Outcome = 0 ? 'Begnin' : 'Malin'
         patientData["Symbol(vega_id)"] = Math.floor(Math.random() * 10000)
         return patientData
       })
