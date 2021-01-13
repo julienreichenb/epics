@@ -177,9 +177,9 @@ const Visualisation = props => {
         title,
         text,
         lines,
-        pcaSpes: pcaChart,
-        lasagnaSpec: lasagnaChart,
-        selectedFeatures: features.filter((f) => f.selected).map(({ feature_id }) => feature_id),
+        pcaSpec: JSON.stringify(pcaChart.spec),
+        lasagnaSpec: JSON.stringify(lasagnaChart.spec),
+        selectedFeatures: JSON.stringify(features.filter((f) => f.selected).map(({ feature_id }) => feature_id)),
         user: 5, // Get current user ID
         date: new Date(),
       }
