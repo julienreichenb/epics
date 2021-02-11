@@ -22,7 +22,7 @@ const App = props => {
               exact
               path="/visualisation"              
               component={Visualisation}
-              albumId={4}
+              albumId={7}
             />
             <PropsRoute
               path="/"

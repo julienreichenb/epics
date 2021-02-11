@@ -193,7 +193,6 @@ const Visualisation = props => {
       // Refresh the list
       newAnnotations.push(newAnnot)
       setAnnotations(newAnnotations)
-      // TODO: Save in Database -> STRINGIFY LINES !
     }
 
     const deleteAnnotation = (id, willBeDeleted = true) => {
